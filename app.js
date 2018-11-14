@@ -15,6 +15,7 @@ const db = mongoose.connection
 
 const routes = require('./routes/index')
 const users = require('./routes/users')
+const messages = require('./routes/messages')
 
 //init app
 const app = express()
@@ -71,6 +72,8 @@ app.use(function (req, res, next) {
 
 app.use('/', routes)
 app.use('/users', users)
+//app.use('/',messages)
+
 
 // Set Port
 app.set('port', (process.env.PORT || 3000))
