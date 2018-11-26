@@ -1,44 +1,94 @@
 /* Move down content because we have a fixed navbar that is 3.5rem tall */
 body {
-  padding-top: 3.5rem;
+    padding-top: 3.5rem;
 }
 
 form{
-  text-align: left;
+    text-align: left;
+}
+.tab-pane{
+    height: 93%;
+    padding-left: 0px;
+}
+.tabcontent{
+    height: 100%;
+    display: none;
+}
+.tab {
+    overflow: hidden;
+    border: 1px solid #ccc;
+    background-color: #f1f1f1;
+}
+.tab button {
+    background-color: inherit;
+    float: left;
+    border: 2px black;
+    outline: none;
+    cursor: pointer;
+    padding: 14px 16px;
+    transition: 0.3s;
+}
+.tab button.active {
+    background-color: #ccc;
+}
+.list-group{
+    overflow: scroll;
+    height: 550px;
 }
 
 
 /**
 * temp styles
 */
-*{ 
-  font-family:tahoma; 
-  font-size:12px; 
-  padding:0px; 
-  margin:0px; 
+
+.box {
+    padding:5px;
+    background:#ddd;
+    border-radius:5px;
+    overflow-y: scroll;
+    border:1px solid #CCC;
+    height: 547px;
 }
-p { 
-  line-height:18px; 
+#message {
+    border-radius:2px;
+    vertical-align: bottom;
+    border:1px solid #ccc;
+    margin-top:10px;
+    padding:5px;
+    width:80%;
 }
-div { 
-  width:500px; 
-  margin-left:auto; 
-  margin-right:auto;}
-.box { 
-  padding:5px; 
-  background:#ddd; 
-  border-radius:5px; 
-  overflow-y: scroll;
-       border:1px solid #CCC; 
-       margin-top:10px; 
-       height: 160px; 
+
+/**
+*Styles for the board
+*/
+* {
+    border: 0;
+    padding: 0;
 }
-#message { 
-border-radius:2px; 
-border:1px solid #ccc;
-     margin-top:10px; 
-     padding:5px; 
-     width:385px;  
+
+#game-board {
+    background: #0074B3;
+    width: 730px;
+    cursor: pointer;
 }
-.inline {
-  display: inline;
+
+.column {
+    width: 100px;
+    display: inline-block;
+}
+
+.column:hover  circle.free{
+    fill: #D5E4ED;
+}
+
+circle.free {
+    fill: #fff;
+}
+
+circle.red {
+    fill: #D50000;
+}
+
+circle.yellow {
+    fill: #DAD400;
+}

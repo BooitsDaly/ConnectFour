@@ -1,4 +1,5 @@
 <?php
+session_start();
 function addHeader(){
     echo "<!doctype html>
 <html lang=\"en\">
@@ -27,39 +28,24 @@ function addHeader(){
         <ul class=\"navbar-nav mr-auto\">";
           if(isset($_SESSION['authenticated']) && !empty($_SESSION['authenticated'])){
           echo "<li class=\"nav-item active\">
-            <a class=\"nav-link\" href=\"/\">Dashboard <span class=\"sr-only\"></span></a>
+            <a class=\"nav-link\" href=\"loby.php\">Dashboard <span class=\"sr-only\"></span></a>
           </li>
           <li class=\"nav-item active\">
-            <a class=\"nav-link\" href=\"/users/logout\">Logout <span class=\"sr-only\"></span></a>
+            <a class=\"nav-link\" href=\"./../index.php\">Logout <span class=\"sr-only\"></span></a>
           </li>";
             }else{
           echo "<li class=\"nav-item active\">
-            <a class=\"nav-link\" href=\"/users/login\">Login <span class=\"sr-only\"></span></a>
+            <a class=\"nav-link\" href=\"./../index.php\">Login <span class=\"sr-only\"></span></a>
           </li>
           <li class=\"nav-item active\">
-            <a class=\"nav-link\" href=\"/users/register\">Register <span class=\"sr-only\"></span></a>
+            <a class=\"nav-link\" href=\"./register.php\">Register <span class=\"sr-only\"></span></a>
           </li>";
             }
         echo "</ul>
        
       </div>
-    </nav>";
-
-//    <div class=\"row\">
-//        <div class=\"col-lg-12\">
-//          {{#if success_msg}}
-//            <div class=\"alert alert-success\">{{success_msg}}</div>
-//          {{/if}}
-//
-//          {{#if error_msg}}
-//            <div class=\"alert alert-danger\">{{error_msg}}</div>
-//          {{/if}}
-//
-//          {{#if error}}
-//            <div class=\"alert alert-danger\">{{error}}</div>
-//          {{/if}}
-//
-//        </div>";
+    </nav>
+    <div id='user-message'></div>";
 }
 function addFooter(){
     echo "<footer class=\"container\">
@@ -72,6 +58,9 @@ function addFooter(){
             <script type=\"text/javascript\" src='./../assets/js/helpers.js'></script>
             <script type=\"text/javascript\" src='./../assets/js/bootstrap.bundle.js'></script>
             <script type=\"text/javascript\" src='./../assets/js/bootstrap.js'></script>
+            <script type=\"text/javascript\" src='./../assets/js/ajaxFunctions.js'></script>
+            <script type=\"text/javascript\" src='./../assets/js/login.js'></script>
+
           </body>
         </html>";
 }

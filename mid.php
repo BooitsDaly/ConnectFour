@@ -2,11 +2,29 @@
 //include the files needed for the "method"
 if(isset($_REQUEST['method'])){
     foreach(glob("./ServiceLayer/" .$_REQUEST['a'] . "/*.php") as $filename){
-        include_once($filename);
+        require ($filename);
     }
+    //echo getcwd();
+    //require_once "./ServiceLayer/users/userService.php";
     //set the variables
+    $serviceMethod = $_REQUEST['method'];
+    $data = $_REQUEST['data'];
+
+    //TODO:validate and sanitize
 
     //make the method call
-
+    $result = @call_user_func($serviceMethod,$data);
     //check valid data and echo
+    if($result){
+        header("Content-Type: text/plain");
+        echo $result;
+    }
+}
+
+function sanitizeString($var){
+    $var = trim($var);
+    $var = stripslashes($var);
+    $var = htmlentities($var);
+    $var = strip_tags($var);
+    return $var;
 }

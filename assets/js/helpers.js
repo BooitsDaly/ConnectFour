@@ -18,3 +18,21 @@ function toggleTabs(evt,tab){
     document.getElementById(tab).style.display = "block";
     evt.currentTarget.className += " active";
 }
+
+function displayFeedback(type, message){
+    let markup = `
+    <div class="row">
+       <div class="col-lg-12">
+       ${messageType(type,message)}
+       </div>
+   </div>
+    `;
+    $('#user-message').append(markup);
+}
+function messageType(type,message){
+    if(type === "success"){
+        return `<div class="alert alert-success">${message}</div>`;
+    }else if(type === 'error'){
+        return `<div class=\"alert alert-danger\">${message}</div>`;
+    }
+}
