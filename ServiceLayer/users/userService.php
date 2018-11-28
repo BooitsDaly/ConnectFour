@@ -1,4 +1,5 @@
 <?php
+session_start();
 //include the db layer
 require_once "/home/MAIN/cnd9351/Sites/442/connectFour/DataLayer/user.php";
 //include my dbInfo
@@ -18,6 +19,11 @@ function authenticate($data){
     }else{
         return "error";
     }
+}
 
-
+function getUsers($data){
+    //check that no data was sent in and that the user is logged in
+   if($data == null && isset($_SESSION['authenticated']) && $_SESSION['authenticated'] == true){
+       return getAllUsers();
+   }
 }

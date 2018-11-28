@@ -16,7 +16,7 @@ function addHeader(){
     <link href=\"./../assets/css/styles.css\" rel=\"stylesheet\">
   </head>
 
-  <body>
+  <body class='container'>
 
     <nav class=\"navbar navbar-expand-md navbar-dark fixed-top bg-dark\">
       <a class=\"navbar-brand\" href=\"#\">Connect Four</a>
@@ -60,6 +60,8 @@ function addFooter(){
             <script type=\"text/javascript\" src='./../assets/js/bootstrap.js'></script>
             <script type=\"text/javascript\" src='./../assets/js/ajaxFunctions.js'></script>
             <script type=\"text/javascript\" src='./../assets/js/login.js'></script>
+            <script type=\"text/javascript\" src='./../assets/js/loby.js'></script>
+
 
           </body>
         </html>";

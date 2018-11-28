@@ -7,6 +7,5 @@ $('#loginBtn').on('click', function(e){
   //format the data
   let data = "{\"username\":\"" + user +"\",\"password\": \""+ password +"\"}";
   //ajax
-    console.log(data);
   ajax.ajaxLogin("authenticate",data);
 });

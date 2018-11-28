@@ -36,3 +36,10 @@ function messageType(type,message){
         return `<div class=\"alert alert-danger\">${message}</div>`;
     }
 }
+
+function displayUsers(json){
+    let markup = `<ul class="list-group list-group-flush">`;
+    $.each(json, function(data, index){
+       markup += `<li class="list-group-item">${json.username}<button></button></li>`;
+    });
+}

@@ -8,13 +8,13 @@ const ajax = {
     /*
     * The base ajax call
     */
-    ajaxCall: function(getPost, data){
-        console.log("here 1");
+    ajaxCall: function(getPost, data, url){
+        console.log(data);
         return $.ajax({
             type: getPost,
             async: true,
             cache: false,
-            url: "mid.php",
+            url: url,
             data: data
         });
     },
@@ -25,10 +25,7 @@ const ajax = {
     * - failure show the user an error message
     */
     ajaxLogin: function(whatMethod, val) {
-        console.log("calling the function");
-        console.log(whatMethod);
-        console.log(val);
-        ajax.ajaxCall("POST", {method: whatMethod, a:'users', data: val}).done(function (result) {
+        ajax.ajaxCall("POST", {method: whatMethod, a:'users', data: val}, "./mid.php").done(function (result) {
             $('body').append(result);
             if(result === 'Success'){
                 //redirect to the lobby
@@ -37,6 +34,11 @@ const ajax = {
                 //display an error message on the top of the page
                 displayFeedback('error','Login Failed');
             }
+        });
+    },
+    ajaxGetUsers: function(whatMethod, val){
+        ajax.ajaxCall("GET",{method: whatMethod, a:'users', data: val},"./../mid.php").done(function(json){
+           console.log(json);
         });
     }
 
