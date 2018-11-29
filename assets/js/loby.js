@@ -14,6 +14,7 @@ $(document).ready(function(){
         let user = this.parent().innerText;
         let id = this.parent().data;
         let data = "{\"challenge\":\""+ user +"\", \"challengeId\": \""+ id +"\"}";
+        console.log(data);
         ajax.ajaxChallenge("challenge",data);
     });
 });

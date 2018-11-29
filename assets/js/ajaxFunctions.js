@@ -41,19 +41,28 @@ const ajax = {
      * @param whatMethod
      * @param val
      */
-    ajaxGetUsers: function(whatMethod, val){
-        ajax.ajaxCall("GET",{method: whatMethod, a:'users', data: val},"./../mid.php").done(function(json){
-           let data = JSON.parse(json);
-           let markup = `<ul id="userList" class="list-group list-group-flush">`;
-           $.each(data,function(value){
-               markup += `<li class="list-group-item" data=${data[value].userId}>${data[value].username}<button class="btn btn-danger challengeBtn">Challenge</button></li>`;
-           });
-           markup += `</ul>`;
-           $("#Users").html(markup);
-        });
+    ajaxGetUsers: function(whatMethod, val) {
+        let game = ajax.checkGame();
+        if (game === undefined) {
+            ajax.ajaxCall("GET", {method: whatMethod, a: 'users', data: val}, "./../mid.php").done(function (json) {
+                let data = JSON.parse(json);
+                let markup = `<ul id="userList" class="list-group list-group-flush">`;
+                $.each(data, function (value) {
+                    markup += `<li class="list-group-item" data=${data[value].userId}>${data[value].username}<button class="btn btn-danger challengeBtn">Challenge</button></li>`;
+                });
+                markup += `</ul>`;
+                $("#Users").html(markup);
+            });
+            setInterval(function(){
+                ajax.ajaxGetUsers(whatMethod,val);
+            },3000);
+        }else{
+
+        }
+
 
         //set timer so that the user table stays up to date
-        setInterval(ajax.ajaxGetUsers(whatMethod,val),10000);
+
     },
     /**
      * Ajax Challenge Function
@@ -79,15 +88,31 @@ const ajax = {
      * - Check while the user is in lobby if someone challenges them
      */
     ajaxReciveChallengeCheck: function(){
-        ajax.ajaxCall({method: 'checkForChallenge', a:'users', data: null}).done(function(response){
-            if(response == 'yes'){
-                //challenged
-                console.log("You have been challenged");
-                //change the status back to not challenged
-            }else{
-                //check again
-                setInterval(ajax.ajaxReciveChallengeCheck(),5000)
-            }
+        if(ajax.checkGame() === undefined) {
+            ajax.ajaxCall("GET", {
+                method: 'checkForChallenge',
+                a: 'users',
+                data: null
+            }, "./../mid.php").done(function (response) {
+                if (response == 'yes') {
+                    //challenged
+                    console.log("You have been challenged");
+                    //change the status back to not challenged
+                } else {
+                    //check again
+                    setInterval(function(){ajax.ajaxReciveChallengeCheck();},5000);
+                }
+            });
+        }
+    },
+    /**
+     * Check what game the User is currently in
+     * -make call to get game
+     * -return the game value
+     */
+    checkGame: function(){
+        ajax.ajaxCall("GET",{method: 'checkGame', a: 'users', data: null},"./../mid.php").done(function(game){
+            return game;
         });
     }
 

@@ -51,4 +51,10 @@ function changeChallengeStatus($challengeId = null, $challengeUser = "", $setTo 
     updateChallengeStatus($challengeId, $challengeUser, $setTo);
 }
 
+function checkGame(){
+    if(isset($_SESSION['authenticated']) && $_SESSION['authenticated'] == true && isset($_SESSION['gameid'])){
+        echo $_SESSION['gameid'];
+    }
+}
+
 
