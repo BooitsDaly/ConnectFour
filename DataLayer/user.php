@@ -34,7 +34,7 @@ function authenticateUser($username,$password){
                     }
                 }
 
-                // set the sessions for the user (set up a token??)
+                // set the sessions for the user
                 $_SESSION['authenticated'] = true;
                 $_SESSION['username'] = $user;
                 $_SESSION['gameid'] = 0;
@@ -57,15 +57,16 @@ function authenticateUser($username,$password){
 /**
  * Database Query to get all of the Users in the user table
  * -set up the query
- * -query for all users
+ * -query for all users but the user who sent the request
  * -convert json
  * -return the users
  */
-function getAllUsers(){
+function getAllUsers($username){
     global $mysqli;
-    $query = "SELECT username, gameid, userid from users WHERE isAuthenticated = 1";
+    $query = "SELECT username, gameid, userid from users WHERE isAuthenticated = 1 AND username <> ?";
     try{
         if($stmt = $mysqli->prepare($query)){
+            $stmt->bind_param("s", $username);
             $stmt->execute();
             //grab the data
             //format the data
@@ -78,7 +79,19 @@ function getAllUsers(){
     }catch(Exception $e){
 
     }
+}
 
+function updateChallengeStatus($id, $user, $setTo){
+    global $mysqli;
+    $query = "UPDATE users SET wasChallenged = ? WHERE username = ? AND userid = ?";
+    try{
+        if($stmt = $mysqli->prepare($query)){
+            $stmt->bind_param("isi",$setTo,$user,$id);
+            $stmt->execute();
+        }
+    }catch(Exception $e){
+
+    }
 }
 
 /**
@@ -118,3 +131,5 @@ function returnJSON($stmt){
 //    // This will become the response value for the XMLHttpRequest object
     return json_encode($data);
 }
+
+

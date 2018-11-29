@@ -58,6 +58,10 @@ form{
     width:80%;
 }
 
+.challengeBtn{
+    float: right;
+}
+
 /**
 *Styles for the board
 */

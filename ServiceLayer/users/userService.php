@@ -21,9 +21,34 @@ function authenticate($data){
     }
 }
 
-function getUsers($data){
-    //check that no data was sent in and that the user is logged in
-   if($data == null && isset($_SESSION['authenticated']) && $_SESSION['authenticated'] == true){
-       return getAllUsers();
+/**
+ * Get Users
+ * @return string
+ */
+function getUsers(){
+    //check data was sent and that they are logged in
+   if(isset($_SESSION['authenticated']) && $_SESSION['authenticated'] == true){
+       return getAllUsers($_SESSION['username']);
    }
 }
+
+/**
+ * Challenge the selected user
+ * @param $data
+ */
+function challenge($data){
+    $json = json_decode($data);
+    if(isset($_SESSION['username']) && $_SESSION['authenticated'] && $json->challenge && $json->challengeId){
+        //send the request to that user
+        changeChallengeStatus($json->challengeId, $json->challenge, $json->challengeId);
+    }
+}
+
+function changeChallengeStatus($challengeId = null, $challengeUser = "", $setTo = 0){
+    if($challengeUser == "" || $challengeId == null){
+        updateChallengeStatus($_SESSION['userid'], $_SESSION['username'], $setTo);
+    }
+    updateChallengeStatus($challengeId, $challengeUser, $setTo);
+}
+
+
