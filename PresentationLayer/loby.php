@@ -1,7 +1,9 @@
 <?php
-require_once ("./outline.php");
-addHeader();
-echo '<h2 class="page-header">Loby</h2>
+session_start();
+if(isset($_SESSION['authenticated']) && $_SESSION['authenticated'] == 'true'){
+    require_once ("./outline.php");
+    addHeader();
+    echo '<h2 class="page-header">Loby</h2>
 <p>Connect Four</p>
 <div id=\'loggedIn\' class="row">
 	<div class="col-md-12 col-s-12 col-lg-8">
@@ -175,4 +177,8 @@ echo '<h2 class="page-header">Loby</h2>
 		</div>      
 	</div>		
 </div>';
-addFooter();
+    addFooter();
+}else{
+    header('Location: '.'./../index.php');
+    die();
+}

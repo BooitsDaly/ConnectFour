@@ -26,14 +26,23 @@ const ajax = {
     ajaxLogin: function(whatMethod, val) {
         ajax.ajaxCall("POST", {method: whatMethod, a:'users', data: val}, "./mid.php").done(function (result) {
             $('body').append(result);
+
             if(result === 'Success'){
                 //redirect to the lobby
-                window.location.href = "./PresentationLayer/loby.php";
+                setTimeout(function(){window.location.href = "./PresentationLayer/loby.php";},1000);
             }else{
                 //display an error message on the top of the page
                 displayFeedback('error','Login Failed');
             }
         });
+    },
+    /**
+     * Ajax logout method
+     * @param whatMethod
+     * @param val
+     */
+    ajaxLogout:function(whatMethod, val){
+       ajax.ajaxCall("POST",{method: whatMethod, a:'users', data: val}, "./../mid.php");
     },
     /**
      * Ajax Get Users Function
@@ -48,12 +57,12 @@ const ajax = {
                 let data = JSON.parse(json);
                 let markup = `<ul id="userList" class="list-group list-group-flush">`;
                 $.each(data, function (value) {
-                    markup += `<li class="list-group-item" data=${data[value].userId}>${data[value].username}<button class="btn btn-danger challengeBtn">Challenge</button></li>`;
+                    markup += `<li class="list-group-item" id=${data[value].userid}>${data[value].username}<button class="btn btn-danger challengeBtn">Challenge</button></li>`;
                 });
                 markup += `</ul>`;
                 $("#Users").html(markup);
             });
-            setInterval(function(){
+            setTimeout(function(){
                 ajax.ajaxGetUsers(whatMethod,val);
             },3000);
         }else{
@@ -72,15 +81,7 @@ const ajax = {
      * @param val
      */
     ajaxChallenge: function(whatMethod, val){
-        ajax.ajaxCall("POST",{method: whatMethod, a:'users', data:val},"./../mid.php").done(function(result){
-            console.log(result);
-            if(result === "Accepted"){
-                ajax.ajaxCall("POST",{method: 'changeChallengeStatus', a: 'users', data: 'default'}, './../mid.php');
-                console.log("updated back");
-            }else{
-
-            }
-        });
+        ajax.ajaxCall("POST",{method: whatMethod, a:'users', data:val},"./../mid.php");
     },
 
     /**
@@ -96,11 +97,32 @@ const ajax = {
             }, "./../mid.php").done(function (response) {
                 if (response == 'yes') {
                     //challenged
-                    console.log("You have been challenged");
+                    //TODO: print out the person who challenged you
+                    let markup = `<div class="modal" tabindex="-1" role="dialog">
+                                      <div class="modal-dialog" role="document">
+                                        <div class="modal-content">
+                                          <div class="modal-header">
+                                            <h5 class="modal-title">Challenge</h5>
+                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                              <span aria-hidden="true">&times;</span>
+                                            </button>
+                                          </div>
+                                          <div class="modal-body">
+                                            <p>You have been challenged to a game</p>
+                                          </div>
+                                          <div class="modal-footer">
+                                            <button type="button" class="btn btn-primary challengeResponse" data-dismiss="modal">Accept</button>
+                                            <button type="button" class="btn btn-secondary challengeResponse" data-dismiss="modal">Decline</button>
+                                          </div>
+                                        </div>
+                                      </div>
+                                    </div>`;
+                    $('body').append(markup);
+                    setTimeout(function(){$('.modal').modal('toggle');},1000);
                     //change the status back to not challenged
                 } else {
                     //check again
-                    setInterval(function(){ajax.ajaxReciveChallengeCheck();},5000);
+                    setTimeout(function(){ajax.ajaxReciveChallengeCheck();},5000);
                 }
             });
         }
@@ -114,7 +136,12 @@ const ajax = {
         ajax.ajaxCall("GET",{method: 'checkGame', a: 'users', data: null},"./../mid.php").done(function(game){
             return game;
         });
-    }
+    },
 
+    replyChallenge:function(whatMethod, val){
+        ajax.ajaxCall("POST",{method: whatMethod ,a: 'users',data: val},'./../mid.php').done(function(response){
+            $('body').append(response);
+        });
+    }
 
 };

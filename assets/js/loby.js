@@ -10,11 +10,25 @@ $(document).ready(function(){
      * - format the json
      * - send the request
      */
-    $(".challengeBtn").on("click",function(){
-        let user = this.parent().innerText;
-        let id = this.parent().data;
-        let data = "{\"challenge\":\""+ user +"\", \"challengeId\": \""+ id +"\"}";
-        console.log(data);
+    $(document).on("click",".challengeBtn",function(){
+        let string = $(this).closest("li").prop('textContent');
+        let user = string.replace('Challenge', '');
+        let id = $(this).closest("li").attr('id');
+        let data = `{\"challenge\":\"${user}\", \"challengeId\": \"${id}\"}`;
         ajax.ajaxChallenge("challenge",data);
+    });
+
+    /**
+     * Logout Action Listener
+     * -call the logout
+     */
+    $(document).on("click", '#logout', function(){
+       ajax.ajaxLogout('logoutUser', null);
+    });
+
+    $('body').on('click', '.challengeResponse', function(){
+       let response = $(this).prop('innerHTML');
+       let string = `{\"response\": \"${response}\"}`;
+       ajax.replyChallenge("challengeResponse", string);
     });
 });

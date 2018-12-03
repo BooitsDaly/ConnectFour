@@ -7,6 +7,17 @@ if(isset($_REQUEST['method'])){
     //echo getcwd();
     //require_once "./ServiceLayer/users/userService.php";
     //set the variables
+
+    $now = time(); // Checking the time now when home page starts.
+
+    if ($now > $_SESSION['expire']) {
+        //check that it wasnt included
+        if($_REQUEST['a'] != 'users'){
+            require ('./ServiceLayer/users/userService.php');
+            logoutUser();
+        }
+    }
+
     $serviceMethod = $_REQUEST['method'];
     $data = $_REQUEST['data'];
 

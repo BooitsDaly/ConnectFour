@@ -15,9 +15,39 @@ function authenticate($data){
         $username = sanitizeString($json->username);
         $password = hash('sha256',sanitizeString($json->password));
         //call the db to finish the authentication
+
         return authenticateUser($username, $password);
+        //var_dump($_SESSION);
     }else{
         return "error";
+    }
+}
+
+/**
+ * Function to loggout the user
+ */
+function logoutUser(){
+    if($_SESSION['authenticated'] == true) {
+        //they are logged in so log them out
+        logout($_SESSION['userid']);
+    }
+}
+
+function challengeResponse($data){
+    if($_SESSION['authenticated'] == true){
+        $json = json_decode($data);
+        var_dump($data);
+        if($json->response == "Accept"){
+            return changeChallengeResponse(1);
+        }else if($json->response == "Decline"){
+            return changeChallengeResponse(2);
+        }
+    }
+}
+
+function changeChallengeResponse($value){
+    if($_SESSION['authenticated'] == true){
+        changeChallengeResponseData($_SESSION['challengerid'],$value);
     }
 }
 
@@ -38,15 +68,15 @@ function getUsers(){
  */
 function challenge($data){
     $json = json_decode($data);
-    if(isset($_SESSION['username']) && $_SESSION['authenticated'] && $json->challenge && $json->challengeId){
+    if(isset($_SESSION['username']) && isset($_SESSION['authenticated']) && $json->challenge != null && $json->challengeId != null ){
         //send the request to that user
-        changeChallengeStatus($json->challengeId, $json->challenge, $json->challengeId);
+        changeChallengeStatus($json->challengeId, $json->challenge, $_SESSION['userid']);
     }
 }
 
-function changeChallengeStatus($challengeId = null, $challengeUser = "", $setTo = 0){
-    if($challengeUser == "" || $challengeId == null){
-        updateChallengeStatus($_SESSION['userid'], $_SESSION['username'], $setTo);
+function changeChallengeStatus($challengeId, $challengeUser, $setTo){
+    if($challengeUser == null || $challengeId == null){
+        updateChallengeStatus($_SESSION['userid'], $_SESSION['username'], 0);
     }
     updateChallengeStatus($challengeId, $challengeUser, $setTo);
 }
@@ -54,6 +84,12 @@ function changeChallengeStatus($challengeId = null, $challengeUser = "", $setTo 
 function checkGame(){
     if(isset($_SESSION['authenticated']) && $_SESSION['authenticated'] == true && isset($_SESSION['gameid'])){
         echo $_SESSION['gameid'];
+    }
+}
+
+function checkForChallenge(){
+    if(isset($_SESSION['authenticated']) && $_SESSION['authenticated'] == true && isset($_SESSION['userid'])){
+        return checkChallengeStatus($_SESSION['userid']);
     }
 }
 

@@ -28,10 +28,16 @@ function authenticateUser($username,$password){
             if($stmt->num_rows == 1){
                 //check if gameid = 0 if not reset it
                 if($gameid != 0){
-                    if($stmt = $mysqli->prepare("UPDATE users SET gameid=0 WHERE username = :username")){
-                        $stmt->bind_param('s', $username);
-                        $stmt->execute();
+                    if($stmtgame = $mysqli->prepare("UPDATE users SET gameid=0 WHERE username = :username")){
+                        $stmtgame->bind_param('s', $username);
+                        $stmtgame->execute();
                     }
+                }
+
+                //change authenticated in the server
+                if($stmtauth = $mysqli->prepare("UPDATE users SET isAuthenticated = 1 WHERE username = ?")){
+                    $stmtauth->bind_param('s', $username);
+                    $stmtauth->execute();
                 }
 
                 // set the sessions for the user
@@ -39,6 +45,8 @@ function authenticateUser($username,$password){
                 $_SESSION['username'] = $user;
                 $_SESSION['gameid'] = 0;
                 $_SESSION['userid'] = $userid;
+                $_SESSION['start'] = date();
+                $_SESSION['expire'] = $_SESSION['start'] + (3 * 60 * 60);
 
                 //return the success call
                 return "Success";
@@ -51,6 +59,29 @@ function authenticateUser($username,$password){
     }catch(Exception $e){
         // log the error
         return "Error";
+    }
+}
+
+/**
+ * FUnction to logout the user
+ * -set authenticated to 0 so they show offline to other users
+ * -they can re-log
+ * @param $userid
+ * @return string
+ */
+function logout($userid){
+    global $mysqli;
+    $query = "UPDATE users SET isAuthenticated = 0 WHERE userid = ?";
+    try{
+        if($stmt = $mysqli->prepare($query)){
+            $stmt->bind_param('i', $userid);
+            $stmt->execute();
+            session_unset();
+            session_destroy();
+        }
+        header('Locations: '.'index.php');
+    }catch(Exception $e){
+
     }
 }
 
@@ -81,6 +112,29 @@ function getAllUsers($username){
     }
 }
 
+function changeChallengeResponseData($userid, $status){
+    global $mysqli;
+    $query = "UPDATE users SET responseChallenge = ? WHERE userid = ?";
+    try{
+        if($stmt = $mysqli->prepare($query)){
+            $stmt->bind_param('ii',$status,$userid);
+            $stmt->execute();
+        }
+    }catch(Exception $e){
+        return $e;
+    }
+
+
+}
+
+/**
+ * DataBase update challenge status to the user that challenged them
+ *
+ * @param $id
+ * @param $user
+ * @param $setTo
+ * @return string
+ */
 function updateChallengeStatus($id, $user, $setTo){
     global $mysqli;
     $query = "UPDATE users SET wasChallenged = ? WHERE username = ? AND userid = ?";
@@ -88,11 +142,34 @@ function updateChallengeStatus($id, $user, $setTo){
         if($stmt = $mysqli->prepare($query)){
             $stmt->bind_param("isi",$setTo,$user,$id);
             $stmt->execute();
+            return "success";
         }
     }catch(Exception $e){
-
+        return "error";
     }
 }
+
+function checkChallengeStatus($userid){
+    global $mysqli;
+    $query = "SELECT wasChallenged FROM users WHERE userid = ? AND wasChallenged <> 0";
+    try{
+        if($stmt = $mysqli->prepare($query)){
+
+            $stmt->bind_param('i', $userid);
+            $stmt->execute();
+            $stmt->store_result();
+            $stmt->bind_result($challenger);
+            $stmt->fetch();
+            if($stmt->num_rows != 0){
+                $_SESSION['challengerid'] = $challenger;
+                return 'yes';
+            }
+        }
+    }catch(Exception $e){
+        return 'none';
+    }
+}
+
 
 /**
  * Function call to execute query and format the JSON to return
