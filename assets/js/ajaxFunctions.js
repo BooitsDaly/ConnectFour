@@ -81,7 +81,9 @@ const ajax = {
      * @param val
      */
     ajaxChallenge: function(whatMethod, val){
-        ajax.ajaxCall("POST",{method: whatMethod, a:'users', data:val},"./../mid.php");
+        ajax.ajaxCall("POST",{method: whatMethod, a:'users', data:val},"./../mid.php").done(function(){
+            setTimeout(function(){ajax.resolveChallenge();},3000);
+        });
     },
 
     /**
@@ -138,9 +140,30 @@ const ajax = {
         });
     },
 
+    /**
+     * Ajax call to response to the challenge with a yes or no
+     * @param whatMethod
+     * @param val
+     */
     replyChallenge:function(whatMethod, val){
-        ajax.ajaxCall("POST",{method: whatMethod ,a: 'users',data: val},'./../mid.php').done(function(response){
-            $('body').append(response);
+        ajax.ajaxCall("POST",{method: whatMethod ,a: 'users',data: val},'./../mid.php');
+    },
+
+    /**
+     * After challenge is initiated check for a response
+     * - keep checking until get a response
+     */
+    resolveChallenge: function(){
+        console.log("start");
+        ajax.ajaxCall("GET",{method:'checkReplyChallenge',a:'users', data: null},'./../mid.php').done(function(result){
+            if(result == 'declined'){
+                displayFeedback('error','Challenge has been declined');
+            }else if(result == 'accepted'){
+                displayFeedback('success',"Challenge Accepted");
+            }else{
+                setTimeout(function(){ajax.resolveChallenge();},3000);
+            }
+
         });
     }
 

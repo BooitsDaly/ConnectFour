@@ -70,15 +70,15 @@ function challenge($data){
     $json = json_decode($data);
     if(isset($_SESSION['username']) && isset($_SESSION['authenticated']) && $json->challenge != null && $json->challengeId != null ){
         //send the request to that user
-        changeChallengeStatus($json->challengeId, $json->challenge, $_SESSION['userid']);
+        changeChallengeStatus($json->challengeId, $_SESSION['userid']);
     }
 }
 
-function changeChallengeStatus($challengeId, $challengeUser, $setTo){
-    if($challengeUser == null || $challengeId == null){
-        updateChallengeStatus($_SESSION['userid'], $_SESSION['username'], 0);
+function changeChallengeStatus($challengeId, $setTo){
+    if($challengeId == null){
+        updateChallengeStatus($_SESSION['userid'], 0);
     }
-    updateChallengeStatus($challengeId, $challengeUser, $setTo);
+    updateChallengeStatus($challengeId, $setTo);
 }
 
 function checkGame(){
@@ -93,4 +93,29 @@ function checkForChallenge(){
     }
 }
 
+function checkReplyChallenge(){
+    if(isset($_SESSION['authenticated'])){
+        //make the call
+        $result = checkChallengeReplyStatus($_SESSION['userid']);
+        //get result
+        if($result != 'failed'){
+            //reset my challenge response
+            changeChallengeStatus($_SESSION['userid'], 0);
+            //reset challenger was Challeneged
+            updateChallengeStatus($_SESSION['challengerid'], 0);
+            if($result == 1){
+                //start the game
+                //DO THE THING JULIE
+
+                return 'accepted';
+            }elseif ($result == 2){
+                return 'declined';
+            }
+        }else{
+            return "failed";
+        }
+        //start game if accept
+        //print out declined message if declined
+    }
+}
 

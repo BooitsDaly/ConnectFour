@@ -112,20 +112,6 @@ function getAllUsers($username){
     }
 }
 
-function changeChallengeResponseData($userid, $status){
-    global $mysqli;
-    $query = "UPDATE users SET responseChallenge = ? WHERE userid = ?";
-    try{
-        if($stmt = $mysqli->prepare($query)){
-            $stmt->bind_param('ii',$status,$userid);
-            $stmt->execute();
-        }
-    }catch(Exception $e){
-        return $e;
-    }
-
-
-}
 
 /**
  * DataBase update challenge status to the user that challenged them
@@ -135,12 +121,12 @@ function changeChallengeResponseData($userid, $status){
  * @param $setTo
  * @return string
  */
-function updateChallengeStatus($id, $user, $setTo){
+function updateChallengeStatus($id,$setTo){
     global $mysqli;
-    $query = "UPDATE users SET wasChallenged = ? WHERE username = ? AND userid = ?";
+    $query = "UPDATE users SET wasChallenged = ? WHERE userid = ?";
     try{
         if($stmt = $mysqli->prepare($query)){
-            $stmt->bind_param("isi",$setTo,$user,$id);
+            $stmt->bind_param("ii",$setTo,$id);
             $stmt->execute();
             return "success";
         }
@@ -149,6 +135,13 @@ function updateChallengeStatus($id, $user, $setTo){
     }
 }
 
+/**
+ * Check the wasChalleneged from the table
+ * -if challenged return yes and set session for challenger
+ * -else return none
+ * @param $userid
+ * @return string
+ */
 function checkChallengeStatus($userid){
     global $mysqli;
     $query = "SELECT wasChallenged FROM users WHERE userid = ? AND wasChallenged <> 0";
@@ -167,6 +160,57 @@ function checkChallengeStatus($userid){
         }
     }catch(Exception $e){
         return 'none';
+    }
+}
+
+/**
+ * Check to see if there is a response
+ * send back failed if no rows
+ * sebd back the value if non-zero
+ *
+ * @param $userid
+ * @return string
+ */
+function checkChallengeReplyStatus($userid){
+    global $mysqli;
+    $query = "SELECT responseChallenge FROM users WHERE userid= ? AND responseChallenge <> 0";
+    try{
+        if($stmt = $mysqli->prepare($query)){
+            $stmt->bind_param('i',$userid);
+            $stmt->execute();
+            $stmt->store_result();
+            $stmt->bind_result($responseChallenge);
+            $stmt->fetch();
+            if($stmt->num_rows !=0){
+                return $responseChallenge;
+            }else{
+                return 'failed';
+            }
+        }else{
+            return 'failed';
+        }
+    }catch(Exception $e){
+        return 'failed';
+    }
+}
+
+/**
+ * changes the challenge response data
+ *
+ * @param $userid
+ * @param $status
+ * @return Exception
+ */
+function changeChallengeResponseData($userid, $status){
+    global $mysqli;
+    $query = "UPDATE users SET responseChallenge = ? WHERE userid = ?";
+    try{
+        if($stmt = $mysqli->prepare($query)){
+            $stmt->bind_param('ii',$status,$userid);
+            $stmt->execute();
+        }
+    }catch(Exception $e){
+        return $e;
     }
 }
 
