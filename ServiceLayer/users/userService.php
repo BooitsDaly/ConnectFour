@@ -119,3 +119,9 @@ function checkReplyChallenge(){
     }
 }
 
+function getUsernamebyID($username){
+    if (isset($_SESSION['authenticated'])){
+        return getUsername($username);
+    }
+}
+

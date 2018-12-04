@@ -214,6 +214,24 @@ function changeChallengeResponseData($userid, $status){
     }
 }
 
+function getUsername($userid){
+    global $mysqli;
+    try{
+        if($stmt = $mysqli->prepare("SELECT username FROM users WHERE userid = ?")){
+            $stmt->bind_param('i',$userid);
+            $stmt->execute();
+            $stmt->store_result();
+            $stmt->bind_result($username);
+            $stmt->fetch();
+            if($stmt->num_row != 0){
+                return $username;
+            }
+        }
+    }catch(Exception $e){
+        return "doesnt exist";
+    }
+}
+
 
 /**
  * Function call to execute query and format the JSON to return

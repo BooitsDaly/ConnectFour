@@ -154,7 +154,6 @@ const ajax = {
      * - keep checking until get a response
      */
     resolveChallenge: function(){
-        console.log("start");
         ajax.ajaxCall("GET",{method:'checkReplyChallenge',a:'users', data: null},'./../mid.php').done(function(result){
             if(result == 'declined'){
                 displayFeedback('error','Challenge has been declined');
