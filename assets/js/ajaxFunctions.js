@@ -52,7 +52,7 @@ const ajax = {
      */
     ajaxGetUsers: function(whatMethod, val) {
         let game = ajax.checkGame();
-        if (game === undefined) {
+        if (game == 0) {
             ajax.ajaxCall("GET", {method: whatMethod, a: 'users', data: val}, "./../mid.php").done(function (json) {
                 let data = JSON.parse(json);
                 let markup = `<ul id="userList" class="list-group list-group-flush">`;
@@ -91,7 +91,8 @@ const ajax = {
      * - Check while the user is in lobby if someone challenges them
      */
     ajaxReciveChallengeCheck: function(){
-        if(ajax.checkGame() === undefined) {
+        console.log(ajax.checkGame());
+        if(ajax.checkGame() == 0) {
             ajax.ajaxCall("GET", {
                 method: 'checkForChallenge',
                 a: 'users',
@@ -135,9 +136,15 @@ const ajax = {
      * -return the game value
      */
     checkGame: function(){
+        let json;
         ajax.ajaxCall("GET",{method: 'checkGame', a: 'users', data: null},"./../mid.php").done(function(game){
-            return game;
+            json = JSON.parse(game);
+            $('body').append(json);
+            console.log(json);
+            //return json;
         });
+        console.log(json);
+        return json;
     },
 
     /**
@@ -164,6 +171,17 @@ const ajax = {
             }
 
         });
+    },
+
+    startGame: function(){
+        let gameid = ajax.checkGame();
+        if(gameid !== 0) {
+            ajax.ajaxCall("GET",{method:'getGame', a:'game', data: gameid},'./../midp.php').done(function(){
+                console.log("game start");
+            });
+        }else{
+            setTimeout(function(){ajax.startGame();},3000);
+        }
     }
 
 };

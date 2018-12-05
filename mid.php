@@ -1,6 +1,8 @@
 <?php
+session_start();
 //include the files needed for the "method"
 if(isset($_REQUEST['method'])){
+    require_once ('./helpers.php');
     foreach(glob("./ServiceLayer/" .$_REQUEST['a'] . "/*.php") as $filename){
         require ($filename);
     }
@@ -10,7 +12,7 @@ if(isset($_REQUEST['method'])){
 
     $now = time(); // Checking the time now when home page starts.
 
-    if (isset($_SESSION['expire']) && $now > $_SESSION['expire']) {
+    if (isset($_SESSION) && $now > $_SESSION['expire']) {
         //check that it wasnt included
         if($_REQUEST['a'] != 'users'){
             require ('./ServiceLayer/users/userService.php');

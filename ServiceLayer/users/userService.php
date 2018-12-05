@@ -1,5 +1,4 @@
 <?php
-session_start();
 //include the db layer
 require_once "/home/MAIN/cnd9351/Sites/442/connectFour/DataLayer/user.php";
 //include my dbInfo
@@ -83,7 +82,9 @@ function changeChallengeStatus($challengeId, $setTo){
 
 function checkGame(){
     if(isset($_SESSION['authenticated']) && $_SESSION['authenticated'] == true && isset($_SESSION['gameid'])){
-        echo $_SESSION['gameid'];
+        $gameid = (string)$_SESSION['gameid'];
+        //var_dump($_SESSION['gameid']);
+        return json_encode("{'gameid': $gameid}");
     }
 }
 
@@ -106,7 +107,16 @@ function checkReplyChallenge(){
             if($result == 1){
                 //start the game
                 //DO THE THING JULIE
-
+                include_once ('./../game/gameService.php');
+                //create 2D array let the x be 7 y= 6
+                $board = array();
+                for($i = 0; i < 7; $i++){
+                    $board[$i] = array();
+                    for($j = 0; $j<6; $j++) {
+                        $board[$i][$j] = 0;
+                    }
+                }
+                gameStart($_SESSION['userid'],$_SESSION['challengerid'],$board);
                 return 'accepted';
             }elseif ($result == 2){
                 return 'declined';
@@ -124,4 +134,5 @@ function getUsernamebyID($username){
         return getUsername($username);
     }
 }
+
 
