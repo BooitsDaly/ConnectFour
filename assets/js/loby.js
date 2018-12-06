@@ -3,6 +3,7 @@ $(document).ready(function(){
     ajax.ajaxGetUsers("getUsers", null);
     //start the challenge checker
     ajax.ajaxReciveChallengeCheck();
+    ajax.checkGame();
 
     /**
      * click event handler for the challenge button

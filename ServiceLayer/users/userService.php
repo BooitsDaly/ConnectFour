@@ -70,6 +70,7 @@ function challenge($data){
     if(isset($_SESSION['username']) && isset($_SESSION['authenticated']) && $json->challenge != null && $json->challengeId != null ){
         //send the request to that user
         changeChallengeStatus($json->challengeId, $_SESSION['userid']);
+        $_SESSION['challengerid'] = $json->challengeId;
     }
 }
 
@@ -83,8 +84,7 @@ function changeChallengeStatus($challengeId, $setTo){
 function checkGame(){
     if(isset($_SESSION['authenticated']) && $_SESSION['authenticated'] == true && isset($_SESSION['gameid'])){
         $gameid = (string)$_SESSION['gameid'];
-        //var_dump($_SESSION['gameid']);
-        return json_encode("{'gameid': $gameid}");
+        return json_encode($gameid);
     }
 }
 
@@ -101,24 +101,28 @@ function checkReplyChallenge(){
         //get result
         if($result != 'failed'){
             //reset my challenge response
-            changeChallengeStatus($_SESSION['userid'], 0);
-            //reset challenger was Challeneged
             updateChallengeStatus($_SESSION['challengerid'], 0);
+            //reset challenger was Challeneged
+            changeChallengeResponseData($_SESSION['userid'], 0);
             if($result == 1){
                 //start the game
                 //DO THE THING JULIE
-                include_once ('./../game/gameService.php');
+                include_once ('./ServiceLayer/game/gameService.php');
                 //create 2D array let the x be 7 y= 6
                 $board = array();
-                for($i = 0; i < 7; $i++){
+                for($i = 0; $i < 7; $i++){
                     $board[$i] = array();
                     for($j = 0; $j<6; $j++) {
                         $board[$i][$j] = 0;
                     }
                 }
-                gameStart($_SESSION['userid'],$_SESSION['challengerid'],$board);
+                gameStart($_SESSION['userid'],$_SESSION['challengerid'],json_encode($board));
                 return 'accepted';
             }elseif ($result == 2){
+                //reset my challenge response
+                changeChallengeStatus($_SESSION['userid'], 0);
+                //reset challenger was Challeneged
+                updateChallengeStatus($_SESSION['challengerid'], 0);
                 return 'declined';
             }
         }else{

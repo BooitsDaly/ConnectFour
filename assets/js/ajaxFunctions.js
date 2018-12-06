@@ -5,6 +5,7 @@
 */
 
 const ajax = {
+    gameid: 0,
     /**
     * The base ajax call
     */
@@ -52,7 +53,7 @@ const ajax = {
      */
     ajaxGetUsers: function(whatMethod, val) {
         let game = ajax.checkGame();
-        if (game == 0) {
+        if (game === 0 | ajax.gamid===undefined) {
             ajax.ajaxCall("GET", {method: whatMethod, a: 'users', data: val}, "./../mid.php").done(function (json) {
                 let data = JSON.parse(json);
                 let markup = `<ul id="userList" class="list-group list-group-flush">`;
@@ -91,8 +92,8 @@ const ajax = {
      * - Check while the user is in lobby if someone challenges them
      */
     ajaxReciveChallengeCheck: function(){
-        console.log(ajax.checkGame());
-        if(ajax.checkGame() == 0) {
+        console.log(ajax.gamid);
+        if(ajax.gamid == 0 || ajax.gamid===undefined) {
             ajax.ajaxCall("GET", {
                 method: 'checkForChallenge',
                 a: 'users',
@@ -139,12 +140,10 @@ const ajax = {
         let json;
         ajax.ajaxCall("GET",{method: 'checkGame', a: 'users', data: null},"./../mid.php").done(function(game){
             json = JSON.parse(game);
-            $('body').append(json);
-            console.log(json);
+            ajax.gamid = json;
             //return json;
+            setTimeout(function(){ajax.checkGame();},5000);
         });
-        console.log(json);
-        return json;
     },
 
     /**
@@ -162,9 +161,11 @@ const ajax = {
      */
     resolveChallenge: function(){
         ajax.ajaxCall("GET",{method:'checkReplyChallenge',a:'users', data: null},'./../mid.php').done(function(result){
-            if(result == 'declined'){
+            console.log("here");
+            $('body').append(result);
+            if(result === 'declined'){
                 displayFeedback('error','Challenge has been declined');
-            }else if(result == 'accepted'){
+            }else if(result === 'accepted'){
                 displayFeedback('success',"Challenge Accepted");
             }else{
                 setTimeout(function(){ajax.resolveChallenge();},3000);
@@ -174,9 +175,8 @@ const ajax = {
     },
 
     startGame: function(){
-        let gameid = ajax.checkGame();
-        if(gameid !== 0) {
-            ajax.ajaxCall("GET",{method:'getGame', a:'game', data: gameid},'./../midp.php').done(function(){
+        if(ajax.gamid !== 0) {
+            ajax.ajaxCall("GET",{method:'getGame', a:'game', data: ajax.gamid},'./../midp.php').done(function(){
                 console.log("game start");
             });
         }else{

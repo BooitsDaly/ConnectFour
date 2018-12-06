@@ -5,8 +5,14 @@
  * - create a game
  */
 function gameStart($player1, $player2, $board){
+    //include the game datalayer this is called from userService after the challenge
+    include_once ('./DataLayer/game.php');
     //create a game in the game  table
-    $gameinfo = createNewGame($player1,$player2, $board,new Date());
+
+
+    //TODO: Make this return the gameID
+    createNewGame($player1,(int)$player2, $board,date("Y-m-d h:i:s"));
+
     $gameid = getPlayerGameid($player1);
     //update each players gameid to the new gameid
     setGameId($player1, $gameid);

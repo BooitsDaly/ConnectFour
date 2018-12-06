@@ -219,7 +219,7 @@ function setGameId($player,$value){
     $query = "UPDATE user SET gameid=? WHERE userid=?";
     try{
         if($stmt = $mysqli->prepare($query)) {
-            $stmt->bind_param("ii", $player, $value);
+            $stmt->bind_param("ii", $value, $player);
             $stmt->execute();
         }
     }catch(Exception $e){
@@ -229,7 +229,7 @@ function setGameId($player,$value){
 
 function getPlayerGameid($userid){
     global $mysqli;
-    $query = "SELECT gameid FROM users WHRER userid=?";
+    $query = "SELECT gameid FROM users WHERE userid=?";
     try{
         if($stmt = $mysqli->prepare($query)){
             $stmt->bind_param("i",$userid);

@@ -12,7 +12,7 @@ if(isset($_REQUEST['method'])){
 
     $now = time(); // Checking the time now when home page starts.
 
-    if (isset($_SESSION) && $now > $_SESSION['expire']) {
+    if (isset($_SESSION['expire']) && $now > $_SESSION['expire']) {
         //check that it wasnt included
         if($_REQUEST['a'] != 'users'){
             require ('./ServiceLayer/users/userService.php');

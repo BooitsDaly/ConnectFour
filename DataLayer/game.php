@@ -10,14 +10,14 @@
  */
 function createNewGame($player1id, $player2id, $board, $date){
     global $mysqli;
-    $query = "INSERT INTO users (turn,board,last_updated, player1, player2) VALUES (?,?,?,?,?)";
+    $query = "INSERT INTO games (turn,board,last_updated, player1, player2) VALUES (?,?,?,?,?)";
     try{
         if($stmt = $mysqli->prepare($query)){
-            $stmt->bind_parm('issiii', $player1id,$board, $date, $player1id, $player2id);
+            $stmt->bind_param('issii', $player1id,$board, $date, $player1id, $player2id);
             $stmt->execute();
         }
     }catch(Exception $e){
-
+        //log errors
     }
 }
 
@@ -32,6 +32,8 @@ function selectGame($gameid){
             //format the data
             return returnJSON($stmt);
         }
-    }catch(Exception $e){}
+    }catch(Exception $e){
+        return $e;
+    }
 }
 
