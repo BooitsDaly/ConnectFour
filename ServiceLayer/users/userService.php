@@ -83,8 +83,9 @@ function changeChallengeStatus($challengeId, $setTo){
 
 function checkGame(){
     if(isset($_SESSION['authenticated']) && $_SESSION['authenticated'] == true && isset($_SESSION['gameid'])){
-        $gameid = (string)$_SESSION['gameid'];
-        return json_encode($gameid);
+        $gameid = getPlayerGameid($_SESSION['userid']);
+        $_SESSION['gameid'] = $gameid;
+        return $gameid;
     }
 }
 
@@ -105,19 +106,22 @@ function checkReplyChallenge(){
             //reset challenger was Challeneged
             changeChallengeResponseData($_SESSION['userid'], 0);
             if($result == 1){
+                //size of board
+                $_SESSION['rows'] = 7;
+                $_SESSION['columns'] = 6;
                 //start the game
                 //DO THE THING JULIE
                 include_once ('./ServiceLayer/game/gameService.php');
                 //create 2D array let the x be 7 y= 6
                 $board = array();
-                for($i = 0; $i < 7; $i++){
+                for($i = 0; $i < $_SESSION['rows']; $i++){
                     $board[$i] = array();
-                    for($j = 0; $j<6; $j++) {
+                    for($j = 0; $j<$_SESSION['columns']; $j++) {
                         $board[$i][$j] = 0;
                     }
                 }
-                gameStart($_SESSION['userid'],$_SESSION['challengerid'],json_encode($board));
-                return 'accepted';
+                return gameStart($_SESSION['userid'],$_SESSION['challengerid'],json_encode($board));
+                //return 'accepted';
             }elseif ($result == 2){
                 //reset my challenge response
                 changeChallengeStatus($_SESSION['userid'], 0);
@@ -137,6 +141,10 @@ function getUsernamebyID($username){
     if (isset($_SESSION['authenticated'])){
         return getUsername($username);
     }
+}
+
+function getPlayerid(){
+
 }
 
 

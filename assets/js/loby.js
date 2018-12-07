@@ -4,6 +4,7 @@ $(document).ready(function(){
     //start the challenge checker
     ajax.ajaxReciveChallengeCheck();
     ajax.checkGame();
+    ajax.startGame();
 
     /**
      * click event handler for the challenge button
@@ -23,8 +24,10 @@ $(document).ready(function(){
      * Logout Action Listener
      * -call the logout
      */
-    $(document).on("click", '#logout', function(){
+    $(document).on("click", '#logout', function(e){
+       e.preventDefault();
        ajax.ajaxLogout('logoutUser', null);
+       window.location.herf = "./index.php";
     });
 
     $('body').on('click', '.challengeResponse', function(){

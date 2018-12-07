@@ -10,15 +10,15 @@ if(isset($_REQUEST['method'])){
     //require_once "./ServiceLayer/users/userService.php";
     //set the variables
 
-    $now = time(); // Checking the time now when home page starts.
-
-    if (isset($_SESSION['expire']) && $now > $_SESSION['expire']) {
-        //check that it wasnt included
-        if($_REQUEST['a'] != 'users'){
-            require ('./ServiceLayer/users/userService.php');
-            logoutUser();
-        }
-    }
+//    $now = time(); // Checking the time now when home page starts.
+//
+//    if (isset($_SESSION['expire']) && $now > $_SESSION['expire']) {
+//        //check that it wasnt included
+//        if($_REQUEST['a'] != 'users'){
+//            require ('./ServiceLayer/users/userService.php');
+//            logoutUser();
+//        }
+//    }
 
     $serviceMethod = $_REQUEST['method'];
     $data = $_REQUEST['data'];

@@ -216,7 +216,7 @@ function changeChallengeResponseData($userid, $status){
 
 function setGameId($player,$value){
     global $mysqli;
-    $query = "UPDATE user SET gameid=? WHERE userid=?";
+    $query = "UPDATE users SET gameid=? WHERE userid=?";
     try{
         if($stmt = $mysqli->prepare($query)) {
             $stmt->bind_param("ii", $value, $player);

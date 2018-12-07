@@ -30,7 +30,7 @@ function addHeader(){
             <a class=\"nav-link\" href=\"loby.php\">Dashboard <span class=\"sr-only\"></span></a>
           </li>
           <li class=\"nav-item active\">
-            <a class=\"nav-link\" id='logout' href='#'>Logout <span class=\"sr-only\"></span></a>
+            <a id='logout'>Logout <span class=\"sr-only\"></span></a>
           </li>";
             }else{
           echo "<li class=\"nav-item active\">

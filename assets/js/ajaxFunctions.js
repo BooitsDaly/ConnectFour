@@ -53,7 +53,7 @@ const ajax = {
      */
     ajaxGetUsers: function(whatMethod, val) {
         let game = ajax.checkGame();
-        if (game === 0 | ajax.gamid===undefined) {
+        if (game === 0 || ajax.gamid===undefined) {
             ajax.ajaxCall("GET", {method: whatMethod, a: 'users', data: val}, "./../mid.php").done(function (json) {
                 let data = JSON.parse(json);
                 let markup = `<ul id="userList" class="list-group list-group-flush">`;
@@ -92,7 +92,6 @@ const ajax = {
      * - Check while the user is in lobby if someone challenges them
      */
     ajaxReciveChallengeCheck: function(){
-        console.log(ajax.gamid);
         if(ajax.gamid == 0 || ajax.gamid===undefined) {
             ajax.ajaxCall("GET", {
                 method: 'checkForChallenge',
@@ -137,11 +136,8 @@ const ajax = {
      * -return the game value
      */
     checkGame: function(){
-        let json;
         ajax.ajaxCall("GET",{method: 'checkGame', a: 'users', data: null},"./../mid.php").done(function(game){
-            json = JSON.parse(game);
-            ajax.gamid = json;
-            //return json;
+            ajax.gameid = game;
             setTimeout(function(){ajax.checkGame();},5000);
         });
     },
@@ -161,7 +157,6 @@ const ajax = {
      */
     resolveChallenge: function(){
         ajax.ajaxCall("GET",{method:'checkReplyChallenge',a:'users', data: null},'./../mid.php').done(function(result){
-            console.log("here");
             $('body').append(result);
             if(result === 'declined'){
                 displayFeedback('error','Challenge has been declined');
@@ -175,13 +170,20 @@ const ajax = {
     },
 
     startGame: function(){
-        if(ajax.gamid !== 0) {
-            ajax.ajaxCall("GET",{method:'getGame', a:'game', data: ajax.gamid},'./../midp.php').done(function(){
-                console.log("game start");
+        let gameid = ajax.gameid;
+        console.log(gameid);
+        if(gameid !== 0 && gameid !== undefined) {
+            ajax.ajaxCall("GET",{method:'getGameInfo', a:'game', data: gameid},'./../mid.php').done(function(json){
+                let data = JSON.parse(json);
+                console.log(data);
             });
         }else{
             setTimeout(function(){ajax.startGame();},3000);
         }
+    },
+
+    getPlayerid: function(){
+        ajax.ajaxCall("GET", {method: 'getPlayerid'})
     }
 
 };

@@ -1,3 +1,7 @@
+var player;
+var playerid;
+var gameid;
+
 function toggleTabs(evt,tab){
     // Declare all variables
     var i, tabcontent, tablinks;

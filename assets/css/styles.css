@@ -62,6 +62,10 @@ form{
     float: right;
 }
 
+#logout{
+    cursor: pointer;
+}
+
 /**
 *Styles for the board
 */
