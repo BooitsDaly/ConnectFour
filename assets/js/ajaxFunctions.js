@@ -185,5 +185,8 @@ const ajax = {
     getPlayerid: function(){
         ajax.ajaxCall("GET", {method: 'getPlayerid'})
     }
+    //get turn
+    //change turn
+    
 
 };
