@@ -71,83 +71,82 @@ function getBoard($gameid){
     }catch(Exception $e){
 
     }
+}
 
-    function updateBoardMove($board, $player, $gameid){
-        global $mysqli;
-        $query = "UPDATE games SET board = ?, last_move = ? WHERE gameid=?";
-        try{
-            if($stmt = $mysqli->prepare($query)){
-                $stmt->bind_param("sii", $board, $player,$gameid);
-                $stmt->execute();
-            }
-        }catch(Exception $e){
-
+function updateBoardMove($board, $player, $gameid){
+    global $mysqli;
+    $query = "UPDATE games SET board = ?, last_move = ? WHERE gameid=?";
+    try{
+        if($stmt = $mysqli->prepare($query)){
+            $stmt->bind_param("sii", $board, $player,$gameid);
+            $stmt->execute();
         }
+    }catch(Exception $e){
+
     }
+}
 
-    function updateWin($userid,$gameid){
-        global $mysqli;
-        $query = "UPDATE games SET win = ? WHERE gameid=?";
-        try{
-            if($stmt = $mysqli->prepare($query)){
-                $stmt->bind_param("ii", $userid,$gameid);
-                $stmt->execute();
-            }
-        }catch(Exception $e){
-
+function updateWin($userid,$gameid){
+    global $mysqli;
+    $query = "UPDATE games SET win = ? WHERE gameid=?";
+    try{
+        if($stmt = $mysqli->prepare($query)){
+            $stmt->bind_param("ii", $userid,$gameid);
+            $stmt->execute();
         }
+    }catch(Exception $e){
+
     }
+}
 
-    function updateTurn($userid, $gameid){
-        global $mysqli;
-        $query = "UPDATE games SET turn = ? WHERE gameid=?";
-        try{
-            if($stmt = $mysqli->prepare($query)){
-                $stmt->bind_param("ii", $userid,$gameid);
-                $stmt->execute();
-            }
-        }catch(Exception $e){
-
+function updateTurn($userid, $gameid){
+    global $mysqli;
+    $query = "UPDATE games SET turn = ? WHERE gameid=?";
+    try{
+        if($stmt = $mysqli->prepare($query)){
+            $stmt->bind_param("ii", $userid,$gameid);
+            $stmt->execute();
         }
+    }catch(Exception $e){
+
     }
+}
 
-    function getLastPiece($gameid){
-        global $mysqli;
-        $query = "SELECT last_move FROM games WHERE gameid=?";
-        try{
-            if($stmt = $mysqli->prepare($query)){
-                $stmt->bind_param("i", $gameid);
-                $stmt->execute();
-                $stmt->store_result();
-                $stmt->bind_result($lastMove);
-                $stmt->fetch();
-                return $lastMove;
-            }
-        }catch(Exception $e){
-
+function getLastPiece($gameid){
+    global $mysqli;
+    $query = "SELECT last_move FROM games WHERE gameid=?";
+    try{
+        if($stmt = $mysqli->prepare($query)){
+            $stmt->bind_param("i", $gameid);
+            $stmt->execute();
+            $stmt->store_result();
+            $stmt->bind_result($lastMove);
+            $stmt->fetch();
+            return $lastMove;
         }
-    }
+    }catch(Exception $e){
 
-    function getWin($gameid){
-        global $mysqli;
-        $query = "SELECT win FROM games WHERE gameid=?";
-        try{
-            if($stmt = $mysqli->prepare($query)){
-                $stmt->bind_param("i", $gameid);
-                $stmt->execute();
-                $stmt->store_result();
-                $stmt->bind_result($win);
-                $stmt->fetch();
-                if($win == 0){
-                    return false;
-                }else{
-                    return true;
-                }
+    }
+}
+
+function getWin($gameid){
+    global $mysqli;
+    $query = "SELECT win FROM games WHERE gameid=?";
+    try{
+        if($stmt = $mysqli->prepare($query)){
+            $stmt->bind_param("i", $gameid);
+            $stmt->execute();
+            $stmt->store_result();
+            $stmt->bind_result($win);
+            $stmt->fetch();
+            if($win == 0){
+                return false;
+            }else{
+                return true;
             }
-        }catch(Exception $e){
-
         }
-    }
+    }catch(Exception $e){
 
+    }
 }
 

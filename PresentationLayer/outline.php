@@ -10,6 +10,7 @@ function addHeader(){
 
     <!-- Bootstrap core CSS -->
     <link href=\"./../assets/css/bootstrap.min.css\" rel=\"stylesheet\">
+    
 
     <!-- Custom styles for this template -->
     <link href=\"./../assets/css/styles.css\" rel=\"stylesheet\">
@@ -30,7 +31,7 @@ function addHeader(){
             <a class=\"nav-link\" href=\"loby.php\">Dashboard <span class=\"sr-only\"></span></a>
           </li>
           <li class=\"nav-item active\">
-            <a id='logout'>Logout <span class=\"sr-only\"></span></a>
+            <a id='logout' class=\"nav-link\">Logout <span class=\"sr-only\"></span></a>
           </li>";
             }else{
           echo "<li class=\"nav-item active\">
@@ -54,12 +55,15 @@ function addFooter(){
               src=\"https://code.jquery.com/jquery-3.3.1.min.js\"
               integrity=\"sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=\"
               crossorigin=\"anonymous\"></script>
+            <script src=\"//cdn.jsdelivr.net/npm/velocity-animate@2.0/velocity.min.js\"></script>
             <script type=\"text/javascript\" src='./../assets/js/helpers.js'></script>
             <script type=\"text/javascript\" src='./../assets/js/bootstrap.bundle.js'></script>
             <script type=\"text/javascript\" src='./../assets/js/bootstrap.js'></script>
             <script type=\"text/javascript\" src='./../assets/js/ajaxFunctions.js'></script>
             <script type=\"text/javascript\" src='./../assets/js/login.js'></script>
             <script type=\"text/javascript\" src='./../assets/js/loby.js'></script>
+            <script type=\"text/javascript\" src='./../assets/js/game.class.js'></script>
+
 
 
           </body>

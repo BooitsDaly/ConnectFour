@@ -5,7 +5,8 @@
 */
 
 const ajax = {
-    gameid: 0,
+    gameid: "",
+    username: "",
     /**
     * The base ajax call
     */
@@ -26,8 +27,6 @@ const ajax = {
     */
     ajaxLogin: function(whatMethod, val) {
         ajax.ajaxCall("POST", {method: whatMethod, a:'users', data: val}, "./mid.php").done(function (result) {
-            $('body').append(result);
-
             if(result === 'Success'){
                 //redirect to the lobby
                 setTimeout(function(){window.location.href = "./PresentationLayer/loby.php";},1000);
@@ -43,7 +42,20 @@ const ajax = {
      * @param val
      */
     ajaxLogout:function(whatMethod, val){
-       ajax.ajaxCall("POST",{method: whatMethod, a:'users', data: val}, "./../mid.php");
+       ajax.ajaxCall("POST",{method: whatMethod, a:'users', data: val}, "./../mid.php").done(function(){
+           setTimeout(function(){window.location.href = "./../index.php";},1000);
+       });
+    },
+    ajaxRegister:function(whatMethod,val){
+        ajax.ajaxCall("POST",{method: whatMethod, a:'users', data: val},"./../mid.php").done(function(result){
+            if(result === 'Success'){
+                //redirect to the lobby
+                setTimeout(function(){window.location.href = "./loby.php";},1000);
+            }else{
+                //display an error message on the top of the page
+                displayFeedback('error','Registration Failed');
+            }
+        });
     },
     /**
      * Ajax Get Users Function
@@ -52,27 +64,34 @@ const ajax = {
      * @param val
      */
     ajaxGetUsers: function(whatMethod, val) {
-        let game = ajax.checkGame();
-        if (game === 0 || ajax.gamid===undefined) {
-            ajax.ajaxCall("GET", {method: whatMethod, a: 'users', data: val}, "./../mid.php").done(function (json) {
-                let data = JSON.parse(json);
-                let markup = `<ul id="userList" class="list-group list-group-flush">`;
-                $.each(data, function (value) {
-                    markup += `<li class="list-group-item" id=${data[value].userid}>${data[value].username}<button class="btn btn-danger challengeBtn">Challenge</button></li>`;
-                });
-                markup += `</ul>`;
-                $("#Users").html(markup);
+        ajax.ajaxCall("GET", {method: whatMethod, a: 'users', data: val}, "./../mid.php").done(function (json) {
+            let data = JSON.parse(json);
+            let markup = `<ul id="userList" class="list-group list-group-flush">`;
+            $.each(data, function (value) {
+                markup += `<li class="list-group-item" id=${data[value].userid}>${data[value].username}<button class="btn btn-danger challengeBtn">Challenge</button></li>`;
             });
-            setTimeout(function(){
-                ajax.ajaxGetUsers(whatMethod,val);
-            },3000);
-        }else{
+            markup += `</ul>`;
+            $("#Users").html(markup);
+        });
+        setTimeout(function(){
+            ajax.ajaxGetUsers(whatMethod,val);
+        },3000);
+    },
+    getMessages:function(){
+        ajax.ajaxCall("GET",{method: 'getMessages', a: 'messages', data:null}, "./../mid.php").done(function(data){
+            let json = JSON.parse(data);
+            $('#chatlog').html("");
+            $.each(json,function(value){
+                chatMessages(json[value].message, json[value].username);
+            });
+        });
+        setTimeout(function(){ajax.getMessages();},2000);
 
-        }
+    },
+    sendMessage: function(whatMethod,val){
+        ajax.ajaxCall("POST",{method: whatMethod, a: 'messages', data:val},"./../mid.php").done(function(){
 
-
-        //set timer so that the user table stays up to date
-
+        });
     },
     /**
      * Ajax Challenge Function
@@ -92,7 +111,7 @@ const ajax = {
      * - Check while the user is in lobby if someone challenges them
      */
     ajaxReciveChallengeCheck: function(){
-        if(ajax.gamid == 0 || ajax.gamid===undefined) {
+        if(ajax.gamid === 0 || ajax.gamid === undefined) {
             ajax.ajaxCall("GET", {
                 method: 'checkForChallenge',
                 a: 'users',
@@ -172,21 +191,41 @@ const ajax = {
     startGame: function(){
         let gameid = ajax.gameid;
         console.log(gameid);
-        if(gameid !== 0 && gameid !== undefined) {
+        if(gameid !== 0 && gameid !== undefined && gameid !== "") {
             ajax.ajaxCall("GET",{method:'getGameInfo', a:'game', data: gameid},'./../mid.php').done(function(json){
+                console.log(json);
                 let data = JSON.parse(json);
                 console.log(data);
+                new Game(data.player1, data.player2);
+                ajax.checkTurn();
             });
         }else{
             setTimeout(function(){ajax.startGame();},3000);
         }
     },
-
-    getPlayerid: function(){
-        ajax.ajaxCall("GET", {method: 'getPlayerid'})
-    }
     //get turn
+    checkTurn:function(){
+        if(ajax.gameid !== 0){
+            ajax.ajaxCall("GET",{method:'checkTurn', a:'game', data: null},'./../mid.php').done(function(json){
+                let data = JSON.parse(json);
+                console.log(data);
+                //is it my turn?
+                if(data.turn === "turn"){
+                    //change identifier for turn
+                    //place the opponents peice if not empty(first turn)
+                    if(data.piece !== ""){
+                        //place piece
+                    }
+                }else{
+                    setTimeout(function(){ajax.checkTurn();},5000);
+                }
+            });
+        }
+    },
     //change turn
+    changeTurn: function(){
+
+    }
     
 
 };

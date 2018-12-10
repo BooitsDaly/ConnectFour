@@ -1,6 +1,6 @@
 <?php
 if(isset($_SESSION['authenticated'])) {
-//include the db layer
+    //include the db layer
     require_once "/home/MAIN/cnd9351/Sites/442/connectFour/DataLayer/game.php";
 //include my dbInfo
     require_once "/home/MAIN/cnd9351/Sites/dbInfoPS.inc";
@@ -9,14 +9,8 @@ if(isset($_SESSION['authenticated'])) {
      * - Needs player1 and player2, board size, date
      * - create a game
      */
-    function gameStart($player1, $player2, $board)
-    {
-//        //include the game datalayer this is called from userService after the challenge
-//        require_once('./DataLayer/game.php');
-        //create a game in the game  table
-
+    function gameStart($player1, $player2, $board){
         $gameid = createNewGame($player1, (int)$player2, $board, date("Y-m-d h:i:s"));
-
         if (is_numeric($gameid)) {
             //update each players gameid to the new gameid
             setGameId($player1, $gameid);
@@ -24,28 +18,46 @@ if(isset($_SESSION['authenticated'])) {
          }
     }
 
+    /**
+     * Gets all the game info in JSON format
+     *
+     * @return Exception|string
+     */
     function getGameInfo(){
         return selectGame($_SESSION['gameid']);
     }
 
+    /**
+     * checks if it thier turn
+     * checks to see if the other user won
+     * gets the last peice played
+     * @return string
+     */
     function checkTurn(){
-        if($_SESSION['userid'] == getTurn()){
+        if($_SESSION['userid'] == getTurn($_SESSION['gameid'])){
             //your turn -- what do I need?
             //check if the other person won
             $win = getWin($_SESSION['gameid']);
             //last peice placed
             $piece = getLastPiece($_SESSION['gameid']);
-            $json = "{\"piece\": \"$piece\", \"win\": \"$win\"}";
+            $json = "{\"piece\": \"$piece\", \"win\": \"$win\",\"turn\":\"turn\"}";
             return json_encode($json);
         }else{
             //not your turn
-            return "notTurn";
+            return "{\"turn\":\"notTurn\"}";
         }
     }
 
+    /**
+     * checks to see if its thier turn
+     * validates move and checks win condition
+     * updates turn
+     * @param $piece
+     * @return string
+     */
     function changeTurn($piece){
         //is it your turn?
-        if($_SESSION['userid'] == getTurn()){
+        if($_SESSION['userid'] == getTurn($_SESSION['gameid'])){
             //yes -- change turn -- send the
             if(validateMove($piece)){
                 //they won
@@ -62,6 +74,15 @@ if(isset($_SESSION['authenticated'])) {
         }
     }
 
+    /**
+     * checks to see if the move is valid by iterating through the passed in col
+     * looks for the first '0' value found  and checks if the row is the same if it is then its a valid move
+     * checks the win condition
+     * updates board
+     *
+     * @param $piece
+     * @return bool
+     */
     function validateMove($piece){
         //get the board
         $board = getBoard($_SESSION['gameid']);
@@ -95,6 +116,19 @@ if(isset($_SESSION['authenticated'])) {
         //no -- not a valid move
     }
 
+    /**
+     * Checks to see if the win condition has been met
+     * - horizontal at Row
+     * - vertical at Column
+     * - diagonal right - smaller number [minus][minus]
+     * - diagonal left - smaller number [minus][plus]
+     *  -- iterate by: (total row/column - (bigger number - smaller))
+     *
+     * @param $board
+     * @param $row
+     * @param $col
+     * @return bool
+     */
     function winCondition($board, $row, $col){
         $maxRow = $_SESSION['rows'];
         $maxCol = $_SESSION['columns'];
@@ -112,8 +146,8 @@ if(isset($_SESSION['authenticated'])) {
 
         //vertical check
         $cnt=0;
-        for($i = 0; i <$_SESSION['row']; $i++){
-            if($board[$i][$col] == $_SESSION[userid]){
+        for($i = 0; $i <$_SESSION['row']; $i++){
+            if($board[$i][$col] == $_SESSION['userid']){
                 $cnt++;
                 if($cnt == 4){
                     //win
@@ -158,7 +192,7 @@ if(isset($_SESSION['authenticated'])) {
             $cnt=0;
            $startcol = $col - $row;
            $difference = $maxCol - $startcol;
-           for($i = $maxRow; i > $difference; $i--){
+           for($i = $maxRow; $i > $difference; $i--){
                if($board[$startcol][$i] == $_SESSION['userid']){
                    $cnt++;
                    if($cnt == 4){
@@ -172,7 +206,7 @@ if(isset($_SESSION['authenticated'])) {
             $cnt=0;
             $startRow = $row -$col;
             $difference = $maxRow - $startRow;
-            for($i = $maxCol; i > $difference; $i--){
+            for($i = $maxCol; $i > $difference; $i--){
                 if($board[$i][$startRow] == $_SESSION['userid']){
                     $cnt++;
                     if($cnt == 4){

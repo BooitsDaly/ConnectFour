@@ -47,3 +47,10 @@ function displayUsers(json){
        markup += `<li class="list-group-item">${json.username}<button></button></li>`;
     });
 }
+
+function chatMessages(msg,username){
+    let p = document.createElement("p");
+    let message = document.createTextNode(username+": " + msg);
+    p.appendChild(message);
+    document.getElementById('chatlog').appendChild(p);
+}

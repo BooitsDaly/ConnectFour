@@ -85,6 +85,27 @@ function logout($userid){
     }
 }
 
+function registerUser($username, $password){
+    global $mysqli;
+    $query = "INSERT INTO users (username,password,gameid,isAuthenticated, wasChallenged, responseChallenge) 
+              VALUES (?,?,0,1,0,0)";
+    try{
+        if($stmt=$mysqli->prepare($query)){
+            $stmt->bind_param("ss",$username,$password);
+            $stmt->execute();
+            $_SESSION['authenticated'] = true;
+            $_SESSION['username'] = $username;
+            $_SESSION['gameid'] = 0;
+            $_SESSION['userid'] = $stmt->insert_id;
+            $_SESSION['start'] = date();
+            $_SESSION['expire'] = $_SESSION['start'] + (3 * 60 * 60);
+            return "Success";
+        }
+    }catch(Exception $e){
+
+    }
+}
+
 /**
  * Database Query to get all of the Users in the user table
  * -set up the query

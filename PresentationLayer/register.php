@@ -3,28 +3,20 @@ include_once ("./outline.php");
 addHeader();
 echo "<div class=\"col-md-4 offset-md-4 login\">
   <h2 class=\"page-header\">Register</h2>
-  <form method=\"post\" action=\"/users/register\">
-    <div class=\"form-group\">
-      <label>Name</label>
-      <input type=\"text\" class=\"form-control\" placeholder=\"Name\" name=\"name\">
-    </div>
+  <form>
     <div class=\"form-group\">
       <label>Username</label>
-      <input type=\"text\" class=\"form-control\" placeholder=\"Username\" name=\"username\">
-    </div>
-    <div class=\"form-group\">
-      <label>Email</label>
-      <input type=\"email\" class=\"form-control\" placeholder=\"Email\" name=\"email\">
+      <input id='usernameReg' type=\"text\" class=\"form-control\" placeholder=\"Username\" name=\"username\">
     </div>
     <div class=\"form-group\">
       <label>Password</label>
-      <input type=\"password\" class=\"form-control\" placeholder=\"Password\" name=\"password\">
+      <input id='passReg' type=\"password\" class=\"form-control\" placeholder=\"Password\" name=\"password\">
     </div>
     <div class=\"form-group\">
       <label>Confirm Password</label>
-      <input type=\"password\" class=\"form-control\" placeholder=\"Password\" name=\"password2\">
+      <input id='passRegConfirm' type=\"password\" class=\"form-control\" placeholder=\"Password\" name=\"password2\">
     </div>
-    <button type=\"submit\" class=\"btn btn-default\">Submit</button>
+    <button type=\"submit\" id='registerbtn' class=\"btn btn-default\">Submit</button>
   </form>
 </div>";
 addFooter();

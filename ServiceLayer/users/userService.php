@@ -4,10 +4,12 @@ require_once "/home/MAIN/cnd9351/Sites/442/connectFour/DataLayer/user.php";
 //include my dbInfo
 require_once "/home/MAIN/cnd9351/Sites/dbInfoPS.inc";
 
-/*
-* Authenticate the User
- * - data{username: username, password:password}
-*/
+/**
+ * Authenticate the user
+ *
+ * @param $data
+ * @return string
+ */
 function authenticate($data){
     $json = json_decode($data);
     if($json->username && $json->password){
@@ -22,8 +24,17 @@ function authenticate($data){
     }
 }
 
+function register($data){
+    $json = json_decode($data);
+    if($json->username && $json->password){
+        $username = sanitizeString($json->username);
+        $password = hash('sha256',sanitizeString($json->password));
+        return registerUser($username,$password);
+    }
+}
+
 /**
- * Function to loggout the user
+ * Function to logout the user
  */
 function logoutUser(){
     if($_SESSION['authenticated'] == true) {
@@ -37,9 +48,9 @@ function challengeResponse($data){
         $json = json_decode($data);
         var_dump($data);
         if($json->response == "Accept"){
-            return changeChallengeResponse(1);
+            changeChallengeResponse(1);
         }else if($json->response == "Decline"){
-            return changeChallengeResponse(2);
+            changeChallengeResponse(2);
         }
     }
 }
@@ -120,8 +131,8 @@ function checkReplyChallenge(){
                         $board[$i][$j] = 0;
                     }
                 }
-                return gameStart($_SESSION['userid'],$_SESSION['challengerid'],json_encode($board));
-                //return 'accepted';
+                gameStart($_SESSION['userid'],$_SESSION['challengerid'],json_encode($board));
+                return 'accepted';
             }elseif ($result == 2){
                 //reset my challenge response
                 changeChallengeStatus($_SESSION['userid'], 0);

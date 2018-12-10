@@ -3,9 +3,22 @@ $('#loginBtn').on('click', function(e){
   //grab the username and password out of the text fields
   let user = document.getElementById('username').value;
   let password = document.getElementById('password').value;
-  //TODO: may need to encrypt the password here
   //format the data
   let data = "{\"username\":\"" + user +"\",\"password\": \""+ password +"\"}";
   //ajax
   ajax.ajaxLogin("authenticate",data);
+});
+
+$('#registerbtn').on('click', function(e){
+   e.preventDefault();
+   let username = document.getElementById('usernameReg').value;
+   let pass1 = document.getElementById('passReg').value;
+   let pass2 = document.getElementById('passRegConfirm').value;
+   if(pass1 === pass2){
+       let data = "{\"username\":\"" + username +"\",\"password\": \""+ pass1 +"\"}";
+       ajax.ajaxRegister("register",data);
+   }else{
+       displayFeedback('error','Your passwords do no match');
+   }
+
 });

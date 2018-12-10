@@ -1,6 +1,7 @@
 $(document).ready(function(){
     //on load populate the users tab
     ajax.ajaxGetUsers("getUsers", null);
+    ajax.getMessages();
     //start the challenge checker
     ajax.ajaxReciveChallengeCheck();
     ajax.checkGame();
@@ -34,5 +35,11 @@ $(document).ready(function(){
        let response = $(this).prop('innerHTML');
        let string = `{\"response\": \"${response}\"}`;
        ajax.replyChallenge("challengeResponse", string);
+    });
+    $('#sendMessage').on('click',function(){
+        let msg = document.getElementById('message').value;
+        chatMessages(msg, ajax.username);
+        ajax.sendMessage("saveMessage","{\"message\": \""+msg+"\"}");
+        document.getElementById('message').value = "";
     });
 });
