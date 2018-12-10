@@ -42,4 +42,8 @@ $(document).ready(function(){
         ajax.sendMessage("saveMessage","{\"message\": \""+msg+"\"}");
         document.getElementById('message').value = "";
     });
+
+    $('#leaveGame').on('click',function(){
+        ajax.leaveGame();
+    });
 });

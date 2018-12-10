@@ -225,6 +225,11 @@ const ajax = {
     //change turn
     changeTurn: function(){
 
+    },
+    leaveGame: function(){
+        ajax.ajaxCall("POST",{"POST",{},"./../mid.php").done(function(){
+            displayFeedback('error', "You have ended the game");
+        });
     }
     
 

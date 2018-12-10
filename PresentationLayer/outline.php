@@ -32,7 +32,11 @@ function addHeader(){
           </li>
           <li class=\"nav-item active\">
             <a id='logout' class=\"nav-link\">Logout <span class=\"sr-only\"></span></a>
-          </li>";
+          </li>
+          <li class=\"nav-item active\">
+            <a id='leaveGame' class=\"nav-link\">Leave Game <span class=\"sr-only\"></span></a>
+          </li>
+          ";
             }else{
           echo "<li class=\"nav-item active\">
             <a class=\"nav-link\" href=\"./../index.php\">Login <span class=\"sr-only\"></span></a>
