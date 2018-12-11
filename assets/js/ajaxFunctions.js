@@ -7,6 +7,9 @@
 const ajax = {
     gameid: "",
     username: "",
+    turn: false,
+    userid: null,
+    game: null,
     /**
     * The base ajax call
     */
@@ -196,7 +199,7 @@ const ajax = {
                 console.log(json);
                 let data = JSON.parse(json);
                 console.log(data);
-                new Game(data.player1, data.player2);
+                ajax.game = new Game(data.player1, data.player2);
                 ajax.checkTurn();
             });
         }else{
@@ -208,29 +211,40 @@ const ajax = {
         if(ajax.gameid !== 0){
             ajax.ajaxCall("GET",{method:'checkTurn', a:'game', data: null},'./../mid.php').done(function(json){
                 let data = JSON.parse(json);
-                console.log(data);
+                console.log(data.turn);
                 //is it my turn?
                 if(data.turn === "turn"){
+                    ajax.turn = true;
                     //change identifier for turn
                     //place the opponents peice if not empty(first turn)
                     if(data.piece !== ""){
                         //place piece
                     }
                 }else{
-                    setTimeout(function(){ajax.checkTurn();},5000);
+                    setTimeout(function(){ajax.checkTurn();},3000);
                 }
             });
         }
     },
     //change turn
-    changeTurn: function(){
-
+    changeTurn: function(whatMethod, data){
+        ajax.ajaxCall("POST",{method: whatMethod, a:'game', data:data}, "./../mid.php").done(function(data){
+            $('body').append(data);
+        });
     },
-    leaveGame: function(){
-        ajax.ajaxCall("POST",{"POST",{},"./../mid.php").done(function(){
-            displayFeedback('error', "You have ended the game");
+    getUserInfo:function () {
+        ajax.ajaxCall("GET",{method:'getUserInfo', a:'users', data:null},"./../mid.php").done(function(data){
+            let json = JSON.parse(data);
+            console.log(json[0].userid);
+            ajax.username = json[0].username;
+            ajax.userid = json[0].userid;
         });
     }
-    
+    // leaveGame: function(){
+    //     ajax.ajaxCall("POST",{"POST",{},"./../mid.php").done(function(){
+    //         displayFeedback('error', "You have ended the game");
+    //     });
+    // }
+
 
 };

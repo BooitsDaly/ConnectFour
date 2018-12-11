@@ -290,5 +290,22 @@ function getUsername($userid){
     }
 }
 
+function getUserData($userid){
+    global $mysqli;
+    $query = "SELECT username, userid from users WHERE userid = ?";
+    try{
+        if($stmt = $mysqli->prepare($query)){
+            $stmt->bind_param("i", $userid);
+            $stmt->execute();
+            //grab the data
+            //format the data
+            return returnJSON($stmt);
+            //return data
+        }
+    }catch(Exception $e){
+
+    }
+}
+
 
 

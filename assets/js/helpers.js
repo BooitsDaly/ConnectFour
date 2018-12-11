@@ -31,7 +31,7 @@ function displayFeedback(type, message){
        </div>
    </div>
     `;
-    $('#user-message').append(markup);
+    $('#user-message').html(markup);
 }
 function messageType(type,message){
     if(type === "success"){

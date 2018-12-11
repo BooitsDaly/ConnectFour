@@ -41,7 +41,7 @@ if(isset($_SESSION['authenticated'])) {
             //last peice placed
             $piece = getLastPiece($_SESSION['gameid']);
             $json = "{\"piece\": \"$piece\", \"win\": \"$win\",\"turn\":\"turn\"}";
-            return json_encode($json);
+            return ($json);
         }else{
             //not your turn
             return "{\"turn\":\"notTurn\"}";
@@ -57,17 +57,27 @@ if(isset($_SESSION['authenticated'])) {
      */
     function changeTurn($piece){
         //is it your turn?
+        $json = json_decode($piece);
+        $piece = array();
+        $piece[0] = $json->col;
+        $piece[1] = $json->row;
+        $col = $piece[0];
+        $row = $piece[1];
+        $board = getBoard($_SESSION['gameid']);
         if($_SESSION['userid'] == getTurn($_SESSION['gameid'])){
             //yes -- change turn -- send the
             if(validateMove($piece)){
-                //they won
-                updateTurn($_SESSION['userid'], $_SESSION['gameid']);
-                return "win";
+                //did they win?
+                if(winCondition($board,$row,$col)){
+                    return "win";
+                }
+                updateTurn($_SESSION['userid'],$_SESSION['gameid']);
+                $board[$col][$row] = $_SESSION['userid'];
+                updateBoardMove($board,$_SESSION['userid'], $_SESSION['gameid']);
             }else{
-                //they didnt win
-                updateTurn($_SESSION['userid'], $_SESSION['gameid']);
+                //they didnt win -- they cheated
+                return "cheater";
             }
-
         }else{
             //no - return not your turn
             return "notTurn";
@@ -86,34 +96,25 @@ if(isset($_SESSION['authenticated'])) {
     function validateMove($piece){
         //get the board
         $board = getBoard($_SESSION['gameid']);
+        var_dump($board);
         //is it a free space? -- look for the
         //check row and col are correct size
-        if($piece[0] < $_SESSION['row'] && $piece[1] < $_SESSION['columns']){
-            $col = $piece[1];
-            $row = $piece[0];
-            for($i = 0; $i < $_SESSION['rows']; $i++){
-                if($board[$i][$col] == 0 && $i == $row){
-                    //this is a valid move
-                    $board[$i][$col] = $_SESSION['userid'];
-                    //run the win condition
-                    if(winCondition($board, $row, $col)){
-                        // player won
-                        //update winner to userid
-                        updateWin($_SESSION['userid'], $_SESSION['gameid']);
-                        updateBoardMove($board,$_SESSION['challengerid'],$_SESSION['gameid']);
-                        //return win
-                        return true;
+        $col = $piece[0];
+        $row = $piece[1];
+        var_dump($_SESSION);
+        var_dump($row);
+        var_dump($board->length);
+        if($row < $board->length && $col < $board[0]->length){
+            if($board[$col][$row] == 0){
+                for($i=$row-1; i > -1 ; $i--){
+                    if($board[$col][$row] != 0){
+                        return false;
                     }
                 }
+                return true;
             }
-            //if not win update board
-            updateBoardMove($board,$_SESSION['challengerid'],$_SESSION['gameid']);
-            return false;
         }
-        //[row][col]
-        //check the col get first 0 --if equal then valid move if not -- not valid -- run the win condition now
-        //yes -- change it in the board --change it in the last_move
-        //no -- not a valid move
+        return false;
     }
 
     /**
@@ -130,93 +131,101 @@ if(isset($_SESSION['authenticated'])) {
      * @return bool
      */
     function winCondition($board, $row, $col){
-        $maxRow = $_SESSION['rows'];
-        $maxCol = $_SESSION['columns'];
+        $maxRow = $board->length;
+        $maxCol =$board[0]->length;
         //horizonal check
         $cnt=0;
-        for($i = 0; $i<$_SESSION['columns']; $i++){
-            if($board[$row][$i] == $_SESSION['userid']){
+        //look left
+        for($i=$row; $i<0; $i--){
+            if($board[$col][$i] == $_SESSION['userid']){
                 $cnt++;
-                if($cnt == 4){
-                    //win!!
+                if($cnt == 3){
                     return true;
                 }
+            }else{
+                break;
+            }
+        }
+        //look right
+        for($i=$row; $i<$maxRow; $i++){
+            if($board[$col][$i] == $_SESSION['userid']){
+                $cnt++;
+                if($cnt == 3){
+                    return true;
+                }
+            }else{
+                break;
             }
         }
 
         //vertical check
         $cnt=0;
-        for($i = 0; $i <$_SESSION['row']; $i++){
-            if($board[$i][$col] == $_SESSION['userid']){
-                $cnt++;
-                if($cnt == 4){
-                    //win
-                    return true;
+        $value = $col;
+        while($value != 0 && $board[$value][$row] == $_SESSION['userid']){
+            $cnt++;
+            $value++;
+            if($cnt == 3){
+                return true;
+            }
+        }
+
+        //diagonal check down right
+        $cnt=0;
+        for($i=$row; $i<$maxRow; $i++){
+            for($j=$row; $j<$maxCol; $j++){
+                if($board[$j][$i] == $_SESSION['userid']){
+                    $cnt++;
+                    if($cnt == 3){
+                        return true;
+                    }
+                }else{
+                    break;
                 }
             }
         }
 
-        //diagonal check down
-        if($col > $row){
-            $startcol = $col - $row;
-            $cnt=0;
-            $difference = $maxCol - $startcol;
-            for($i = 0; $i < $difference; $i++){
-                if($board[$i][$startcol] == $_SESSION['userid']){
+        //check up left
+        for($i=$row; $i<0; $i--){
+            for($j=$row; $j<0; $j--){
+                if($board[$j][$i] == $_SESSION['userid']){
                     $cnt++;
-                    if($cnt == 4){
-                        //win
+                    if($cnt == 3){
                         return true;
                     }
+                }else{
+                    break;
                 }
-                $startcol++;
-            }
-        }else{
-            $cnt=0;
-            $startrow = $row - $col;
-            $difference = $maxRow - $startrow;
-            for($i = 0; $i<$difference; $i++){
-                if($board[$startrow][$i] == $_SESSION['userid']){
-                    $cnt++;
-                    if($cnt == 4){
-                        //win
-                        return true;
-                    }
-                }
-                $startrow++;
             }
         }
 
+        //check down left
+        $cnt=0;
+        for($i=$row; $i<$maxRow; $i++){
+            for($j=$row; $j<0; $j--){
+                if($board[$j][$i] == $_SESSION['userid']){
+                    $cnt++;
+                    if($cnt == 3){
+                        return true;
+                    }
+                }else{
+                    break;
+                }
+            }
+        }
         //diagonal check - up
-        if($col > $row){
-            $cnt=0;
-           $startcol = $col - $row;
-           $difference = $maxCol - $startcol;
-           for($i = $maxRow; $i > $difference; $i--){
-               if($board[$startcol][$i] == $_SESSION['userid']){
-                   $cnt++;
-                   if($cnt == 4){
-                       //win
-                       return true;
-                   }
-               }
-               $startcol++;
-           }
-        }else{
-            $cnt=0;
-            $startRow = $row -$col;
-            $difference = $maxRow - $startRow;
-            for($i = $maxCol; $i > $difference; $i--){
-                if($board[$i][$startRow] == $_SESSION['userid']){
+        for($i=$row; $i<0; $i--){
+            for($j=$row; $j<$maxCol; $j++){
+                if($board[$j][$i] == $_SESSION['userid']){
                     $cnt++;
-                    if($cnt == 4){
-                        //win
+                    if($cnt == 3){
                         return true;
                     }
+                }else{
+                    break;
                 }
-                $startRow++;
             }
         }
         return false;
+
     }
 }

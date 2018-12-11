@@ -25,34 +25,37 @@ class Game{
             }
         }
     }
-    getFree(i,length){
-        let board = this.boardArr;
-        //let length = board[i].length;
-        let number = length;
-        console.log(board[i]);
-        for(let x = 0; x< length ; x++){
-            if(board[i][x] !== 0){
-                console.log(x);
-                number = x;
-                break;
+    getFree(col){
+        let test;
+        for(let i = 0; i < col.length; i++){
+            if(col[i] === 0){
+                //return i;
+                test=i;
             }
         }
-        console.log(number);
-        return number;
+        return test;
     }
-    animatePiece(i,next){
-        console.log(next);
-        for(let x = 0; x < next; x++){
+    animatePiece(i,next,player){
+        for(let x = 0; x < next+1; x++){
             if(this.boardArr[i][x] === 0){
                 //this is a free space
                 if(x !== 0){
                     let prev = x -1;
                     setTimeout(()=> {
                         document.getElementById(i + "-" + prev).setAttributeNS(null, 'class', 'free');
-                        document.getElementById(i + "-" + x).setAttributeNS(null, 'class', 'red');
+                        if(player === true){
+                            document.getElementById(i + "-" + x).setAttributeNS(null, 'class', 'yellow');
+                        }else{
+                            document.getElementById(i + "-" + x).setAttributeNS(null, 'class', 'red');
+                        }
+
                     },1000);
                 }else{
-                    document.getElementById(i+ "-"+ x).setAttributeNS(null,'class','red');
+                    if(player === true){
+                        document.getElementById(i + "-" + x).setAttributeNS(null, 'class', 'yellow');
+                    }else{
+                        document.getElementById(i + "-" + x).setAttributeNS(null, 'class', 'red');
+                    }
                 }
             }
         }
@@ -61,13 +64,24 @@ class Game{
     //for each column
     attachActionListener(i){
         console.log("you have been clicked bitch");
-        console.log(i);
         //let checker = document.getElementsByClassName(i);
         //console.log(checker);
-        let col = this.boardArr[i];
-        let free = this.getFree(i,col);
-        this.animatePiece(i,free);
-        this.boardArr[i][free] = 1;
+        console.log(this.boardArr);
+        if(ajax.turn ===true){
+            let col = this.boardArr[i];
+            let free = this.getFree(col);
+            if(free === undefined){
+                displayFeedback('error','This row is full');
+            }else{
+                this.animatePiece(i,free,true);
+                this.boardArr[i][free] = 1;
+            }
+            ajax.changeTurn('changeTurn',"{\"col\":\""+i +"\" ,\"row\":\""+free +"\"}");
+        }else{
+            displayFeedback('error','Not your turn');
+        }
+
+
 
         //check if there are any empty spots in the col
         //find the next open col

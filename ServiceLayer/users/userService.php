@@ -158,4 +158,8 @@ function getPlayerid(){
 
 }
 
+function getUserInfo(){
+    return getUserData($_SESSION['userid']);
+}
+
 

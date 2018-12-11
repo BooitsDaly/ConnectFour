@@ -6,6 +6,7 @@ $(document).ready(function(){
     ajax.ajaxReciveChallengeCheck();
     ajax.checkGame();
     ajax.startGame();
+    ajax.getUserInfo();
 
     /**
      * click event handler for the challenge button
