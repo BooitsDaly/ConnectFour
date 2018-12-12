@@ -48,7 +48,6 @@ class Game{
                         }else{
                             document.getElementById(i + "-" + x).setAttributeNS(null, 'class', 'red');
                         }
-
                     },1000);
                 }else{
                     if(player === true){
@@ -74,11 +73,13 @@ class Game{
                 displayFeedback('error','This row is full');
             }else{
                 this.animatePiece(i,free,true);
-                this.boardArr[i][free] = 1;
+                this.boardArr[i][free] = ajax.userid;
+                ajax.changeTurn('changeTurn',"{\"col\":\""+i +"\" ,\"row\":\""+free +"\"}");
             }
-            ajax.changeTurn('changeTurn',"{\"col\":\""+i +"\" ,\"row\":\""+free +"\"}");
-        }else{
+        }else if(ajax.turn === false){
             displayFeedback('error','Not your turn');
+        }else{
+            location.reload();
         }
 
 

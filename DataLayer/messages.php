@@ -26,3 +26,16 @@ function insertMessage($userid, $username, $gameid, $message){
 
     }
 }
+
+function deleteMessages($gameid){
+    global $mysqli;
+    $query = "DELETE FROM messages WHERE gameid = ?";
+    try{
+        if($stmt = $mysqli->prepare($query)){
+            $stmt->bind_param('i', $gameid);
+            $stmt->execute();
+        }
+    }catch(Exception $e){
+
+    }
+}

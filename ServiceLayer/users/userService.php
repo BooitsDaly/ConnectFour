@@ -18,7 +18,6 @@ function authenticate($data){
         //call the db to finish the authentication
 
         return authenticateUser($username, $password);
-        //var_dump($_SESSION);
     }else{
         return "error";
     }
@@ -46,7 +45,6 @@ function logoutUser(){
 function challengeResponse($data){
     if($_SESSION['authenticated'] == true){
         $json = json_decode($data);
-        var_dump($data);
         if($json->response == "Accept"){
             changeChallengeResponse(1);
         }else if($json->response == "Decline"){

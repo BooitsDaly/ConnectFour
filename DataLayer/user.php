@@ -204,14 +204,9 @@ function checkChallengeReplyStatus($userid){
             $stmt->fetch();
             if($stmt->num_rows !=0){
                 return $responseChallenge;
-            }else{
-                return 'failed';
             }
-        }else{
-            return 'failed';
         }
     }catch(Exception $e){
-        return 'failed';
     }
 }
 

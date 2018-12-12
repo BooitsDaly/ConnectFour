@@ -1,12 +1,13 @@
 $(document).ready(function(){
     //on load populate the users tab
+    ajax.getUserInfo();
     ajax.ajaxGetUsers("getUsers", null);
     ajax.getMessages();
     //start the challenge checker
     ajax.ajaxReciveChallengeCheck();
     ajax.checkGame();
     ajax.startGame();
-    ajax.getUserInfo();
+
 
     /**
      * click event handler for the challenge button

@@ -4,7 +4,7 @@ session_start();
 if(isset($_REQUEST['method'])){
     require_once ('./helpers.php');
     foreach(glob("./ServiceLayer/" .$_REQUEST['a'] . "/*.php") as $filename){
-        require ($filename);
+        require_once ($filename);
     }
     $serviceMethod = $_REQUEST['method'];
     $data = $_REQUEST['data'];

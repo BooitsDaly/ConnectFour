@@ -32,6 +32,7 @@ function displayFeedback(type, message){
    </div>
     `;
     $('#user-message').html(markup);
+    setTimeout(function(){$('#user-message').html("");},6000);
 }
 function messageType(type,message){
     if(type === "success"){

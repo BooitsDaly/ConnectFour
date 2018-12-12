@@ -66,19 +66,19 @@ function getBoard($gameid){
             $stmt->store_result();
             $stmt->bind_result($board);
             $stmt->fetch();
-            return $board;
+            return json_decode($board);
         }
     }catch(Exception $e){
 
     }
 }
 
-function updateBoardMove($board, $player, $gameid){
+function updateBoardMove($board, $peice, $gameid){
     global $mysqli;
     $query = "UPDATE games SET board = ?, last_move = ? WHERE gameid=?";
     try{
         if($stmt = $mysqli->prepare($query)){
-            $stmt->bind_param("sii", $board, $player,$gameid);
+            $stmt->bind_param("ssi", json_encode($board), json_encode($peice),$gameid);
             $stmt->execute();
         }
     }catch(Exception $e){
@@ -108,7 +108,7 @@ function updateTurn($userid, $gameid){
             $stmt->execute();
         }
     }catch(Exception $e){
-
+        return $e;
     }
 }
 
@@ -145,6 +145,20 @@ function getWin($gameid){
                 return true;
             }
         }
+    }catch(Exception $e){
+
+    }
+}
+
+function deleteGame($gameid){
+    global $mysqli;
+    $query = "DELETE FROM games WHERE gameid=?";
+    try{
+        if($stmt = $mysqli->prepare($query)){
+            $stmt->bind_param("i", $gameid);
+            $stmt->execute();
+        }
+
     }catch(Exception $e){
 
     }
