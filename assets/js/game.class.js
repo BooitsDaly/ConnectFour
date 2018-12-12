@@ -1,15 +1,10 @@
 class Game{
-    constructor(player1, player2) {
+    constructor() {
         this.xhtmlns = "http://www.w3.org/1999/xhtml";
         this.svgns = "http://www.w3.org/2000/svg";
         this.BOARDWIDTH = 7;
         this.BOARDHEIGHT = 6;
-        // [0][0][0] - 0 is empty
-        // [0][0][0] - 1 player1
-        // [1][2][1] - 2 player2
         this.boardArr = new Array();
-        this.player1 = player1;
-        this.player2 = player2;
 
         //create parent for the board
         let gameBoard = document.createElementNS(this.svgns,'g');
@@ -25,6 +20,12 @@ class Game{
             }
         }
     }
+
+    /**
+     * Gets the next free space
+     * @param col
+     * @returns {*}
+     */
     getFree(col){
         let test;
         for(let i = 0; i < col.length; i++){
@@ -35,6 +36,13 @@ class Game{
         }
         return test;
     }
+
+    /**
+     * Animates all the pieces when placed on the board
+     * @param i
+     * @param next
+     * @param player
+     */
     animatePiece(i,next,player){
         for(let x = 0; x < next+1; x++){
             if(this.boardArr[i][x] === 0){
@@ -60,12 +68,11 @@ class Game{
         }
     }
 
-    //for each column
+    /**
+     * Attaches the action listener for each column when the board is created
+     * @param i
+     */
     attachActionListener(i){
-        console.log("you have been clicked bitch");
-        //let checker = document.getElementsByClassName(i);
-        //console.log(checker);
-        console.log(this.boardArr);
         if(ajax.turn ===true){
             let col = this.boardArr[i];
             let free = this.getFree(col);
@@ -78,18 +85,14 @@ class Game{
             }
         }else if(ajax.turn === false){
             displayFeedback('error','Not your turn');
-        }else{
-            location.reload();
         }
-
-
-
-        //check if there are any empty spots in the col
-        //find the next open col
-        //place peice
-        //send ajax call
-
     }
+
+    /**
+     * Creates the columns for the svg
+     * @param i
+     * @returns {HTMLDivElement}
+     */
     createColumn(i){
         let col = document.createElement("div");
         col.setAttribute('id','column-' + i);
@@ -98,6 +101,12 @@ class Game{
         col.onclick =()=>{this.attachActionListener(i)};
         return col;
     }
+
+    /**
+     * creates the rows for the svg
+     * @param i
+     * @returns {HTMLElement | SVGAElement | SVGCircleElement | SVGClipPathElement | SVGComponentTransferFunctionElement | SVGDefsElement | *}
+     */
     createRow(i){
         let row = document.createElementNS(this.svgns,'svg');
         row.setAttributeNS(null,'height','100');
@@ -105,6 +114,13 @@ class Game{
         row.setAttributeNS(null,'class','row-'+i);
         return row;
     }
+
+    /**
+     * creates each circle on the board for connect four
+     * @param i
+     * @param j
+     * @returns {HTMLElement | SVGAElement | SVGCircleElement | SVGClipPathElement | SVGComponentTransferFunctionElement | SVGDefsElement | *}
+     */
     createCircle(i,j){
         let circle = document.createElementNS(this.svgns,'circle');
         circle.setAttributeNS(null,'cx', '50');

@@ -7,6 +7,7 @@
  * @param $player2id
  * @param $board
  * @param $date
+ * @return null
  */
 function createNewGame($player1id, $player2id, $board, $date){
     global $mysqli;
@@ -23,6 +24,12 @@ function createNewGame($player1id, $player2id, $board, $date){
     }
 }
 
+/**
+ * gets the needed game data
+ *
+ * @param $gameid
+ * @return Exception|string
+ */
 function selectGame($gameid){
     global $mysqli;
     $query = "SELECT * from games WHERE gameid = ?";
@@ -39,6 +46,12 @@ function selectGame($gameid){
     }
 }
 
+/**
+ * Checks whose turn it is
+ *
+ * @param $gameid
+ * @return mixed
+ */
 function getTurn($gameid){
     global $mysqli;
     $query = "SELECT turn FROM games WHERE gameid = ?";
@@ -56,6 +69,12 @@ function getTurn($gameid){
     }
 }
 
+/**
+ * Gets the board array from the specified gameid
+ *
+ * @param $gameid
+ * @return mixed
+ */
 function getBoard($gameid){
     global $mysqli;
     $query = "SELECT board FROM games WHERE gameid=?";
@@ -73,6 +92,13 @@ function getBoard($gameid){
     }
 }
 
+/**
+ * updates the board and the move from the specified game id
+ *
+ * @param $board
+ * @param $peice
+ * @param $gameid
+ */
 function updateBoardMove($board, $peice, $gameid){
     global $mysqli;
     $query = "UPDATE games SET board = ?, last_move = ? WHERE gameid=?";
@@ -86,6 +112,12 @@ function updateBoardMove($board, $peice, $gameid){
     }
 }
 
+/**
+ * if someone wins this column is updated
+ *
+ * @param $userid
+ * @param $gameid
+ */
 function updateWin($userid,$gameid){
     global $mysqli;
     $query = "UPDATE games SET win = ? WHERE gameid=?";
@@ -99,6 +131,13 @@ function updateWin($userid,$gameid){
     }
 }
 
+/**
+ * updates the turn to the next player
+ *
+ * @param $userid
+ * @param $gameid
+ * @return Exception
+ */
 function updateTurn($userid, $gameid){
     global $mysqli;
     $query = "UPDATE games SET turn = ? WHERE gameid=?";
@@ -112,6 +151,12 @@ function updateTurn($userid, $gameid){
     }
 }
 
+/**
+ * Gets the last piece that was played to place on the board
+ *
+ * @param $gameid
+ * @return mixed
+ */
 function getLastPiece($gameid){
     global $mysqli;
     $query = "SELECT last_move FROM games WHERE gameid=?";
@@ -129,6 +174,12 @@ function getLastPiece($gameid){
     }
 }
 
+/**
+ * Checks if someone won
+ *
+ * @param $gameid
+ * @return bool
+ */
 function getWin($gameid){
     global $mysqli;
     $query = "SELECT win FROM games WHERE gameid=?";
@@ -150,6 +201,11 @@ function getWin($gameid){
     }
 }
 
+/**
+ * Deletes the game when a player whants to leave
+ *
+ * @param $gameid
+ */
 function deleteGame($gameid){
     global $mysqli;
     $query = "DELETE FROM games WHERE gameid=?";

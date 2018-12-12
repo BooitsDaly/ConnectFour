@@ -1,3 +1,6 @@
+/**
+ * log in the user
+ */
 $('#loginBtn').on('click', function(e){
     e.preventDefault();
   //grab the username and password out of the text fields
@@ -9,6 +12,9 @@ $('#loginBtn').on('click', function(e){
   ajax.ajaxLogin("authenticate",data);
 });
 
+/**
+ * register the user
+ */
 $('#registerbtn').on('click', function(e){
    e.preventDefault();
    let username = document.getElementById('usernameReg').value;

@@ -85,6 +85,13 @@ function logout($userid){
     }
 }
 
+/**
+ * register the user in the db
+ *
+ * @param $username
+ * @param $password
+ * @return string
+ */
 function registerUser($username, $password){
     global $mysqli;
     $query = "INSERT INTO users (username,password,gameid,isAuthenticated, wasChallenged, responseChallenge) 
@@ -230,6 +237,12 @@ function changeChallengeResponseData($userid, $status){
     }
 }
 
+/**
+ * sets the game id when the player enters or leaves a game
+ *
+ * @param $player
+ * @param $value
+ */
 function setGameId($player,$value){
     global $mysqli;
     $query = "UPDATE users SET gameid=? WHERE userid=?";
@@ -243,6 +256,12 @@ function setGameId($player,$value){
     }
 }
 
+/**
+ * get gameid for a specific player
+ *
+ * @param $userid
+ * @return mixed
+ */
 function getPlayerGameid($userid){
     global $mysqli;
     $query = "SELECT gameid FROM users WHERE userid=?";
@@ -285,6 +304,12 @@ function getUsername($userid){
     }
 }
 
+/**
+ * Get the user data for display client side
+ *
+ * @param $userid
+ * @return string
+ */
 function getUserData($userid){
     global $mysqli;
     $query = "SELECT username, userid from users WHERE userid = ?";

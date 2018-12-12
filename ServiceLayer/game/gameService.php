@@ -27,6 +27,11 @@ if(isset($_SESSION['authenticated'])) {
         return selectGame($_SESSION['gameid']);
     }
 
+    /**
+     * delete the game and messages and reset the game id for the users
+     *
+     * @return bool
+     */
     function leave(){
         if($_SESSION['gameid'] != 0){
             //what does this mean? -- how to display this to the other user?

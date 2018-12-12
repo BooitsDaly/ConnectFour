@@ -1,5 +1,9 @@
 <?php
-
+/**
+ * Grab all the messages by lobby
+ * @param $gameid
+ * @return string
+ */
 function allMessages($gameid){
     global $mysqli;
     $query = "SELECT message, username FROM messages WHERE gameid = ?";
@@ -14,6 +18,14 @@ function allMessages($gameid){
     }
 }
 
+/**
+ * add messages when sent
+ *
+ * @param $userid
+ * @param $username
+ * @param $gameid
+ * @param $message
+ */
 function insertMessage($userid, $username, $gameid, $message){
     global $mysqli;
     $query = "INSERT INTO messages (gameid,userid, username, message) VALUES (?,?,?,?)";
@@ -27,6 +39,11 @@ function insertMessage($userid, $username, $gameid, $message){
     }
 }
 
+/**
+ * delete all messages in lobby
+ *
+ * @param $gameid
+ */
 function deleteMessages($gameid){
     global $mysqli;
     $query = "DELETE FROM messages WHERE gameid = ?";

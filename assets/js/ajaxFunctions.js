@@ -50,6 +50,11 @@ const ajax = {
            setTimeout(function(){window.location.href = "./../index.php";},1000);
        });
     },
+    /**
+     * Method called when a user wants to register an account
+     * @param whatMethod
+     * @param val
+     */
     ajaxRegister:function(whatMethod,val){
         ajax.ajaxCall("POST",{method: whatMethod, a:'users', data: val},"./../mid.php").done(function(result){
             if(result === 'Success'){
@@ -81,6 +86,10 @@ const ajax = {
             ajax.ajaxGetUsers(whatMethod,val);
         },3000);
     },
+
+    /**
+     * Called every 2 seconds to keep an active chat
+     */
     getMessages:function(){
         ajax.ajaxCall("GET",{method: 'getMessages', a: 'messages', data:null}, "./../mid.php").done(function(data){
             let json = JSON.parse(data);
@@ -92,6 +101,12 @@ const ajax = {
         setTimeout(function(){ajax.getMessages();},2000);
 
     },
+
+    /**
+     * called when a user wants to send a message
+     * @param whatMethod
+     * @param val
+     */
     sendMessage: function(whatMethod,val){
         ajax.ajaxCall("POST",{method: whatMethod, a: 'messages', data:val},"./../mid.php").done(function(){
 
@@ -164,7 +179,6 @@ const ajax = {
             }else{
                 ajax.gameid = game;
             }
-            console.log(ajax.gameid);
             setTimeout(function(){ajax.checkGame();},2000);
         });
     },
@@ -195,13 +209,16 @@ const ajax = {
         });
     },
 
+    /**
+     * Called when the gameid is changed to get all the info and set up the game client side
+     */
     startGame: function(){
         let gameid = ajax.gameid;
         if(gameid !== 0 && gameid !== undefined && gameid !== "" && gameid != null) {
             ajax.ajaxCall("GET",{method:'getGameInfo', a:'game', data: gameid},'./../mid.php').done(function(json){
                 $('.page-header').html('In Game');
                 let data = JSON.parse(json);
-                ajax.game = new Game(data[0].player1, data[0].player2);
+                ajax.game = new Game();
                 if(data[0].player1 == ajax.userid){
                     ajax.opponent = data[0].player2;
                 }else if(data[0].player2 == ajax.userid){
@@ -211,16 +228,11 @@ const ajax = {
                 let board = JSON.parse(data[0].board);
                 for(let i = 0; i < board.length; i++){
                     for(let j = board[0].length-1; j >-1; j--){
-                        console.log(board[i][j]);
                         if(board[i][j] !== 0){
                             //is it me or them?
-                            console.log(i);
-                            console.log(j);
-                            if(board[i][j] === ajax.userid){
-                                console.log('here');
+                            if(board[i][j] === ajax.userid){;
                                 ajax.game.animatePiece(i,j,true);
                             }else{
-                                console.log("not here");
                                 ajax.game.animatePiece(i,j,false);
                             }
                         }
@@ -233,7 +245,9 @@ const ajax = {
             setTimeout(function(){ajax.startGame();},1000);
         }
     },
-    //get turn
+    /**
+     * check whose turn it is
+     */
     checkTurn:function(){
         if(ajax.gameid !== 0 || ajax.gameid !== null || ajax.gameid !== ""){
             ajax.ajaxCall("GET",{method:'checkTurn', a:'game', data: null},'./../mid.php').done(function(json) {
@@ -248,7 +262,6 @@ const ajax = {
                     if (data.piece !== null) {
                         //place piece
                         let piece = JSON.parse(data.piece);
-                        console.log(game.boardArr[piece[0]][piece[1]]);
                         if(game.boardArr[piece[0]][piece[1]] === 0){
                             game.animatePiece(piece[0], piece[1], false);
                             game.boardArr[piece[0]][piece[1]] = ajax.opponent;
@@ -267,7 +280,11 @@ const ajax = {
             setTimeout(function(){location.reload();},3000);
         }
     },
-    //change turn
+    /**
+     * after a move is made change turns
+     * @param whatMethod
+     * @param data
+     */
     changeTurn: function(whatMethod, data){
         ajax.ajaxCall("POST",{method: whatMethod, a:'game', data:data}, "./../mid.php").done(function(data){
             $('body').append(data);
@@ -288,6 +305,9 @@ const ajax = {
             }
         });
     },
+    /**
+     * Get userinfo so that we can display it
+     */
     getUserInfo:function () {
         ajax.ajaxCall("GET",{method:'getUserInfo', a:'users', data:null},"./../mid.php").done(function(data){
             let json = JSON.parse(data);
@@ -295,6 +315,9 @@ const ajax = {
             ajax.userid = json[0].userid;
         });
     },
+    /**
+     * called when a player wants to leave a game
+     */
     leaveGame: function(){
         ajax.ajaxCall("POST",{method:'leave', a:'game', data: null},"./../mid.php").done(function(result){
             if(result == false){

@@ -26,13 +26,18 @@ function returnJSON($stmt){
         }
         $data[] = $clone;
     }
-//    header("Expires: Mon, 26 Jul 1997 05:00:00 GMT");
-//    header("Last-Modified: " . gmdate("D, d M Y H:i:s") . " GMT");
-//    header("Cache-Control: no-store, no-cache, must-revalidate");
-//    header("Cache-Control: post-check=0, pre-check=0", false);
-//    header("Pragma: no-cache");
-//    //MUST change the content-type
-//    header("Content-Type:text/plain");
-//    // This will become the response value for the XMLHttpRequest object
     return json_encode($data);
+}
+
+/**
+ * sanitize string
+ * @param $var
+ * @return string
+ */
+function sanitizeString($var){
+    $var = trim($var);
+    $var = stripslashes($var);
+    $var = htmlentities($var);
+    $var = strip_tags($var);
+    return $var;
 }

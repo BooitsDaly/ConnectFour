@@ -1,4 +1,6 @@
-/* Move down content because we have a fixed navbar that is 3.5rem tall */
+/**
+    By: Caitlyn Daly
+ */
 body {
     padding-top: 3.5rem;
 }
@@ -36,10 +38,6 @@ form{
     height: 550px;
 }
 
-
-/**
-* temp styles
-*/
 
 .box {
     padding:5px;

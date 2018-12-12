@@ -33,11 +33,18 @@ $(document).ready(function(){
        window.location.herf = "./index.php";
     });
 
+    /**
+     * Respond to he challenge action listener
+     */
     $('body').on('click', '.challengeResponse', function(){
        let response = $(this).prop('innerHTML');
        let string = `{\"response\": \"${response}\"}`;
        ajax.replyChallenge("challengeResponse", string);
     });
+
+    /**
+     * send message action listener
+     */
     $('#sendMessage').on('click',function(){
         let msg = document.getElementById('message').value;
         chatMessages(msg, ajax.username);
@@ -45,6 +52,9 @@ $(document).ready(function(){
         document.getElementById('message').value = "";
     });
 
+    /**
+     * leave game action listener
+     */
     $('#leaveGame').on('click',function(){
         ajax.leaveGame();
     });

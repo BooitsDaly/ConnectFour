@@ -2,6 +2,11 @@ var player;
 var playerid;
 var gameid;
 
+/**
+ * Toggle the tabs between users and messages
+ * @param evt
+ * @param tab
+ */
 function toggleTabs(evt,tab){
     // Declare all variables
     var i, tabcontent, tablinks;
@@ -23,6 +28,11 @@ function toggleTabs(evt,tab){
     evt.currentTarget.className += " active";
 }
 
+/**
+ * displays feedback for users
+ * @param type
+ * @param message
+ */
 function displayFeedback(type, message){
     let markup = `
     <div class="row">
@@ -34,6 +44,13 @@ function displayFeedback(type, message){
     $('#user-message').html(markup);
     setTimeout(function(){$('#user-message').html("");},6000);
 }
+
+/**
+ * Determains the message type to display
+ * @param type
+ * @param message
+ * @returns {string}
+ */
 function messageType(type,message){
     if(type === "success"){
         return `<div class="alert alert-success">${message}</div>`;
@@ -42,6 +59,10 @@ function messageType(type,message){
     }
 }
 
+/**
+ * displays the users for challenge
+ * @param json
+ */
 function displayUsers(json){
     let markup = `<ul class="list-group list-group-flush">`;
     $.each(json, function(data, index){
@@ -49,6 +70,11 @@ function displayUsers(json){
     });
 }
 
+/**
+ * displays chat messages
+ * @param msg
+ * @param username
+ */
 function chatMessages(msg,username){
     let p = document.createElement("p");
     let message = document.createTextNode(username+": " + msg);

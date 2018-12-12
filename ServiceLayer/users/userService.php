@@ -23,6 +23,12 @@ function authenticate($data){
     }
 }
 
+/**
+ * call the register function
+ *
+ * @param $data
+ * @return string
+ */
 function register($data){
     $json = json_decode($data);
     if($json->username && $json->password){
@@ -42,6 +48,10 @@ function logoutUser(){
     }
 }
 
+/**
+ * gets the challenge response from the user and sets it in the db
+ * @param $data
+ */
 function challengeResponse($data){
     if($_SESSION['authenticated'] == true){
         $json = json_decode($data);
@@ -53,6 +63,11 @@ function challengeResponse($data){
     }
 }
 
+/**
+ * calls function to change the challenge response data
+ *
+ * @param $value
+ */
 function changeChallengeResponse($value){
     if($_SESSION['authenticated'] == true){
         changeChallengeResponseData($_SESSION['challengerid'],$value);
@@ -83,6 +98,12 @@ function challenge($data){
     }
 }
 
+/**
+ *  make a call to Changes the challenge status
+ *
+ * @param $challengeId
+ * @param $setTo
+ */
 function changeChallengeStatus($challengeId, $setTo){
     if($challengeId == null){
         updateChallengeStatus($_SESSION['userid'], 0);
@@ -90,6 +111,11 @@ function changeChallengeStatus($challengeId, $setTo){
     updateChallengeStatus($challengeId, $setTo);
 }
 
+/**
+ * checks what game the user is in
+ *
+ * @return mixed
+ */
 function checkGame(){
     if(isset($_SESSION['authenticated']) && $_SESSION['authenticated'] == true && isset($_SESSION['gameid'])){
         $gameid = getPlayerGameid($_SESSION['userid']);
@@ -98,12 +124,22 @@ function checkGame(){
     }
 }
 
+/**
+ * checks to see if someone challenged user
+ *
+ * @return string
+ */
 function checkForChallenge(){
     if(isset($_SESSION['authenticated']) && $_SESSION['authenticated'] == true && isset($_SESSION['userid'])){
         return checkChallengeStatus($_SESSION['userid']);
     }
 }
 
+/**
+ * checks to see if the user responded to the challenge
+ *
+ * @return string
+ */
 function checkReplyChallenge(){
     if(isset($_SESSION['authenticated'])){
         //make the call
@@ -146,16 +182,22 @@ function checkReplyChallenge(){
     }
 }
 
+/**
+ * get the username by the userid
+ *
+ * @param $username
+ * @return string
+ */
 function getUsernamebyID($username){
     if (isset($_SESSION['authenticated'])){
         return getUsername($username);
     }
 }
 
-function getPlayerid(){
-
-}
-
+/**
+ * get the user information
+ * @return string
+ */
 function getUserInfo(){
     return getUserData($_SESSION['userid']);
 }

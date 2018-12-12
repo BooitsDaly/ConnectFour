@@ -59,7 +59,6 @@ function addFooter(){
               src=\"https://code.jquery.com/jquery-3.3.1.min.js\"
               integrity=\"sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=\"
               crossorigin=\"anonymous\"></script>
-            <script src=\"//cdn.jsdelivr.net/npm/velocity-animate@2.0/velocity.min.js\"></script>
             <script type=\"text/javascript\" src='./../assets/js/helpers.js'></script>
             <script type=\"text/javascript\" src='./../assets/js/bootstrap.bundle.js'></script>
             <script type=\"text/javascript\" src='./../assets/js/bootstrap.js'></script>

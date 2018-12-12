@@ -1,13 +1,13 @@
 <?php
 session_start();
 //include the files needed for the "method"
-if(isset($_REQUEST['method'])){
+if(isset($_REQUEST['method']) && isset($_SESSION['authenticated']) && $_SESSION['authenticated'] == true && isset($_SESSION['userid'])){
     require_once ('./helpers.php');
     foreach(glob("./ServiceLayer/" .$_REQUEST['a'] . "/*.php") as $filename){
         require_once ($filename);
     }
     $serviceMethod = $_REQUEST['method'];
-    $data = $_REQUEST['data'];
+    $data = sanitizeString($_REQUEST['data']);
 
     //TODO:validate and sanitize
 
@@ -20,10 +20,4 @@ if(isset($_REQUEST['method'])){
     }
 }
 
-function sanitizeString($var){
-    $var = trim($var);
-    $var = stripslashes($var);
-    $var = htmlentities($var);
-    $var = strip_tags($var);
-    return $var;
-}
+
