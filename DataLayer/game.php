@@ -9,12 +9,12 @@
  * @param $date
  * @return null
  */
-function createNewGame($player1id, $player2id, $board, $date){
+function createNewGame($player1id, $player2id, $board){
     global $mysqli;
-    $query = "INSERT INTO games (turn,board,last_updated, player1, player2, win) VALUES (?,?,?,?,?,0)";
+    $query = "INSERT INTO games (turn,board, player1, player2, win) VALUES (?,?,?,?,0)";
     try{
         if($stmt = $mysqli->prepare($query)){
-            $stmt->bind_param('issii', $player1id,$board, $date, $player1id, $player2id);
+            $stmt->bind_param('isii', $player1id,$board, $player1id, $player2id);
             $stmt->execute();
             return $stmt->insert_id;
         }

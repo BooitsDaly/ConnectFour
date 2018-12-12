@@ -91,6 +91,7 @@ function getUsers(){
  */
 function challenge($data){
     $json = json_decode($data);
+    var_dump($json->challenge);
     if(isset($_SESSION['username']) && isset($_SESSION['authenticated']) && $json->challenge != null && $json->challengeId != null ){
         //send the request to that user
         changeChallengeStatus($json->challengeId, $_SESSION['userid']);
@@ -108,7 +109,9 @@ function changeChallengeStatus($challengeId, $setTo){
     if($challengeId == null){
         updateChallengeStatus($_SESSION['userid'], 0);
     }
-    updateChallengeStatus($challengeId, $setTo);
+    var_dump($challengeId);
+    var_dump($setTo);
+    var_dump(updateChallengeStatus($challengeId, $setTo));
 }
 
 /**

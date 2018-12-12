@@ -121,6 +121,8 @@ const ajax = {
      */
     ajaxChallenge: function(whatMethod, val){
         ajax.ajaxCall("POST",{method: whatMethod, a:'users', data:val},"./../mid.php").done(function(){
+            console.log(val);
+            console.log(whatMethod);
             setTimeout(function(){ajax.resolveChallenge();},2000);
         });
     },

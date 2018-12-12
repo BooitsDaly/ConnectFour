@@ -104,8 +104,6 @@ function registerUser($username, $password){
             $_SESSION['username'] = $username;
             $_SESSION['gameid'] = 0;
             $_SESSION['userid'] = $stmt->insert_id;
-            $_SESSION['start'] = date();
-            $_SESSION['expire'] = $_SESSION['start'] + (3 * 60 * 60);
             return "Success";
         }
     }catch(Exception $e){
@@ -151,6 +149,8 @@ function getAllUsers($username){
  */
 function updateChallengeStatus($id,$setTo){
     global $mysqli;
+    var_dump($id);
+    var_dump($setTo);
     $query = "UPDATE users SET wasChallenged = ? WHERE userid = ?";
     try{
         if($stmt = $mysqli->prepare($query)){
