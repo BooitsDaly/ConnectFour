@@ -149,8 +149,6 @@ function getAllUsers($username){
  */
 function updateChallengeStatus($id,$setTo){
     global $mysqli;
-    var_dump($id);
-    var_dump($setTo);
     $query = "UPDATE users SET wasChallenged = ? WHERE userid = ?";
     try{
         if($stmt = $mysqli->prepare($query)){
@@ -211,9 +209,14 @@ function checkChallengeReplyStatus($userid){
             $stmt->fetch();
             if($stmt->num_rows !=0){
                 return $responseChallenge;
+            }else{
+                return "failed";
             }
+        }else{
+            return "failed";
         }
     }catch(Exception $e){
+        return "failed";
     }
 }
 

@@ -1,6 +1,6 @@
 <?php
 //include the db layer
-require_once "/home/MAIN/cnd9351/Sites/442/connectFour/DataLayer/user.php";
+require_once "./DataLayer/user.php";
 //include my dbInfo
 require_once "/home/MAIN/cnd9351/Sites/dbInfoPS.inc";
 
@@ -90,12 +90,11 @@ function getUsers(){
  * @param $data
  */
 function challenge($data){
-    $json = json_decode($data);
-    var_dump($json->challenge);
-    if(isset($_SESSION['username']) && isset($_SESSION['authenticated']) && $json->challenge != null && $json->challengeId != null ){
+
+    if(isset($_SESSION['username']) && isset($_SESSION['authenticated'])){
         //send the request to that user
-        changeChallengeStatus($json->challengeId, $_SESSION['userid']);
-        $_SESSION['challengerid'] = $json->challengeId;
+        changeChallengeStatus($data['challengeId'], $_SESSION['userid']);
+        $_SESSION['challengerid'] = $data['challengeId'];
     }
 }
 
@@ -107,11 +106,13 @@ function challenge($data){
  */
 function changeChallengeStatus($challengeId, $setTo){
     if($challengeId == null){
+
         updateChallengeStatus($_SESSION['userid'], 0);
+    }else{
+
+        updateChallengeStatus((int)$challengeId, $setTo);
     }
-    var_dump($challengeId);
-    var_dump($setTo);
-    var_dump(updateChallengeStatus($challengeId, $setTo));
+
 }
 
 /**
@@ -149,10 +150,6 @@ function checkReplyChallenge(){
         $result = checkChallengeReplyStatus($_SESSION['userid']);
         //get result
         if($result != 'failed'){
-            //reset my challenge response
-            updateChallengeStatus($_SESSION['challengerid'], 0);
-            //reset challenger was Challeneged
-            changeChallengeResponseData($_SESSION['userid'], 0);
             if($result == 1){
                 //size of board
                 $_SESSION['rows'] = 7;
@@ -169,8 +166,12 @@ function checkReplyChallenge(){
                     }
                 }
                 gameStart($_SESSION['userid'],$_SESSION['challengerid'],json_encode($board));
+                //reset my challenge response
+                updateChallengeStatus($_SESSION['challengerid'], 0);
+                //reset challenger was Challeneged
+                changeChallengeResponseData($_SESSION['userid'], 0);
                 return 'accepted';
-            }elseif ($result == 2){
+            }else if ($result == 2){
                 //reset my challenge response
                 changeChallengeStatus($_SESSION['userid'], 0);
                 //reset challenger was Challeneged

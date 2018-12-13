@@ -18,6 +18,19 @@ echo "<div class=\"col-md-4 offset-md-4 login\">
     </div>
     <button type=\"submit\" id='registerbtn' class=\"btn btn-default\">Submit</button>
   </form>
-</div>";
-addFooter();
+</div>
+<footer class=\"container\">
+              <p>&copy; Connect Four </p>
+            </footer>
+            <script
+              src=\"https://code.jquery.com/jquery-3.3.1.min.js\"
+              integrity=\"sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=\"
+              crossorigin=\"anonymous\"></script>
+            <script type=\"text/javascript\" src='./../assets/js/helpers.js'></script>
+            <script type=\"text/javascript\" src='./../assets/js/bootstrap.bundle.js'></script>
+            <script type=\"text/javascript\" src='./../assets/js/bootstrap.js'></script>
+            <script type=\"text/javascript\" src='./../assets/js/ajaxFunctions.js'></script>
+            <script type=\"text/javascript\" src='./../assets/js/login.js'></script>
+          </body>
+        </html>";
 

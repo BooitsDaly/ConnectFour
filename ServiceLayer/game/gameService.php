@@ -1,8 +1,8 @@
 <?php
 if(isset($_SESSION['authenticated'])) {
     //include the db layer
-    require_once "/home/MAIN/cnd9351/Sites/442/connectFour/DataLayer/game.php";
-//include my dbInfo
+    require_once "./DataLayer/game.php";
+    //include my dbInfo
     require_once "/home/MAIN/cnd9351/Sites/dbInfoPS.inc";
     /**
      * Function to start the game between 2 players
@@ -10,7 +10,7 @@ if(isset($_SESSION['authenticated'])) {
      * - create a game
      */
     function gameStart($player1, $player2, $board){
-        $gameid = createNewGame($player1, (int)$player2, $board, date("Y-m-d h:i:s"));
+        $gameid = createNewGame($player1, (int)$player2, $board);
         if (is_numeric($gameid)) {
             //update each players gameid to the new gameid
             setGameId($player1, $gameid);

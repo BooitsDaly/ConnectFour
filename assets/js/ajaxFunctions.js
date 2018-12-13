@@ -84,7 +84,7 @@ const ajax = {
         });
         setTimeout(function(){
             ajax.ajaxGetUsers(whatMethod,val);
-        },3000);
+        },10000);
     },
 
     /**
@@ -108,9 +108,7 @@ const ajax = {
      * @param val
      */
     sendMessage: function(whatMethod,val){
-        ajax.ajaxCall("POST",{method: whatMethod, a: 'messages', data:val},"./../mid.php").done(function(){
-
-        });
+        ajax.ajaxCall("POST",{method: whatMethod, a: 'messages', data:val},"./../mid.php");
     },
     /**
      * Ajax Challenge Function
@@ -121,9 +119,7 @@ const ajax = {
      */
     ajaxChallenge: function(whatMethod, val){
         ajax.ajaxCall("POST",{method: whatMethod, a:'users', data:val},"./../mid.php").done(function(){
-            console.log(val);
-            console.log(whatMethod);
-            setTimeout(function(){ajax.resolveChallenge();},2000);
+            setTimeout(function(){ajax.resolveChallenge();},3000);
         });
     },
 
@@ -164,7 +160,7 @@ const ajax = {
                 //change the status back to not challenged
             } else {
                 //check again
-                setTimeout(function(){ajax.ajaxReciveChallengeCheck();},2000);
+                setTimeout(function(){ajax.ajaxReciveChallengeCheck();},5000);
             }
         });
 
@@ -181,7 +177,7 @@ const ajax = {
             }else{
                 ajax.gameid = game;
             }
-            setTimeout(function(){ajax.checkGame();},2000);
+            setTimeout(function(){ajax.checkGame();},3000);
         });
     },
 
@@ -205,7 +201,7 @@ const ajax = {
             }else if(result === 'accepted'){
                 displayFeedback('success',"Challenge Accepted");
             }else{
-                setTimeout(function(){ajax.resolveChallenge();},2000);
+                setTimeout(function(){ajax.resolveChallenge();},3000);
             }
 
         });
@@ -244,7 +240,7 @@ const ajax = {
                 ajax.checkTurn();
             });
         }else{
-            setTimeout(function(){ajax.startGame();},1000);
+            setTimeout(function(){ajax.startGame();},3000);
         }
     },
     /**
@@ -274,7 +270,7 @@ const ajax = {
                         }
                     }
                 }else{
-                    setTimeout(function(){ajax.checkTurn();},1000);
+                    setTimeout(function(){ajax.checkTurn();},3000);
                 }
             });
         }else{
@@ -289,7 +285,6 @@ const ajax = {
      */
     changeTurn: function(whatMethod, data){
         ajax.ajaxCall("POST",{method: whatMethod, a:'game', data:data}, "./../mid.php").done(function(data){
-            $('body').append(data);
 
             if(data === 'win'){
                 displayFeedback('success', "You won!");

@@ -19,7 +19,7 @@ $(document).ready(function(){
         let string = $(this).closest("li").prop('textContent');
         let user = string.replace('Challenge', '');
         let id = $(this).closest("li").attr('id');
-        let data = `{\"challenge\":\"${user}\", \"challengeId\": \"${id}\"}`;
+        let data = {challenge: user, challengeId: id};
         ajax.ajaxChallenge("challenge",data);
     });
 
